@@ -1,0 +1,359 @@
+<head>
+    <title>Survey Analysis</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <style type="text/css">
+        .genericField {
+            float: none;
+            padding: 5px
+        }
+
+        #theButton {
+            margin: 10px;
+        }
+
+        #emphasisColor {
+            color: red
+        }
+
+        .TableView {
+            margin: 2px;
+            width: auto;
+            padding: 5px
+        }
+
+        select {
+            width="auto"
+        }
+
+        td,
+        tr {
+            border: 2px solid #dddddd;
+            text-align: left;
+            padding: 10px;
+        }
+
+        button {
+            padding: 5px;
+            margin: 8px
+        }
+
+        table {}
+
+    </style>
+</head>
+
+<body>
+    <button id="theButton" class="btn btn-success" data-toggle="collapse" data-target="#mainForm"><span class="mainForm" aria-hidden="true"></span>Add Survey</button>
+
+    <div id="mainForm" class="panel-collapse collapse" class="mainForm">
+        <form class="form" ng-submit="SubmitSurvey()">
+            <div class="form-group">
+
+                <table>
+                    <!-- 1st Row -->
+                    <tr>
+                        <td colspan="2">
+                            <div class="genericField">
+                                <label>Ticket Number</label>
+                                <input type="text" class="form-control" name="Ticket" ng-model="FormUser.Ticket" required placeholder="IM/SR">
+                            </div>
+                        </td>
+
+                        <td colspan="2">
+                            <div class="genericField">
+                                <label>Date of Ticket Closure</label>
+                                <input type="date" class="form-control" name="TicketClosureDate" ng-model="FormUser.TicketClosureDate" required placeholder="Date">
+                            </div>
+                        </td>
+
+                        <td colspan="2">
+                            <div class="genericField">
+                                <label>Engineer</label>
+                                <input type="text" class="form-control" name="Engineer" ng-model="FormUser.Engineer" required placeholder="Name of Engineer">
+                            </div>
+                        </td>
+                    </tr>
+                    <!-- 2nd Row -->
+                    <tr>
+                        <td colspan="3">
+                            <div class="longField">
+                                <label>Ticket Description</label>
+                                <textarea class="form-control" name="Description" ng-model="FormUser.Description" required placeholder="Ticket Description..."></textarea>
+                            </div>
+                        </td>
+
+                        <td colspan="3">
+                            <div class="longField">
+                                <label>Ticket Issue</label>
+                                <textarea class="form-control" name="Issue" ng-model="FormUser.Issue" required placeholder="Issue Description..."></textarea>
+                            </div>
+                        </td>
+                    </tr>
+                    <!-- 3rd Row -->
+                    <tr>
+                        <td colspan="2">
+                            <div class="genericField">
+                                <label>Service</label>
+                                <input type="text" class="form-control" name="Service" ng-model="FormUser.Service" required placeholder="Porduct Name">
+                            </div>
+                        </td>
+
+                        <td colspan="2">
+                            <div class="genericField">
+                                <label>Customer</label>
+                                <input type="text" class="form-control" name="Customer" ng-model="FormUser.Customer" required placeholder="Customer Name">
+                            </div>
+                        </td>
+
+                        <td colspan="2">
+                            <div class="genericField">
+                                <label>Customer Success Manager</label>
+                                <input type="text" class="form-control" name="CustomerSuccessManager" ng-model="FormUser.CustomerSuccessManager" placeholder="CSM Name" required>
+                            </div>
+                        </td>
+                    </tr>
+                    <!-- 4th Row -->
+                    <tr>
+                        <td>
+                            <div class="shortField">
+                                <label>Customer type</label>
+                                <select class="form-control" name="CustomerType" ng-model="FormUser.CustomerType" required style="width:95px">
+                  <option value="Paying">Paying</option>
+                  <option value="Trial">Trial</option>
+                </select>
+                            </div>
+                        </td>
+
+                        <td>
+                            <div class="shortField">
+                                <label>Overall Support Experience</label>
+                                <select class="form-control" name="OverallSupportExperience" ng-model="FormUser.OverallSupportExperience" required>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                </select>
+                            </div>
+                        </td>
+
+                        <td>
+                            <div class="shortField">
+                                <label>Resolution Quality</label>
+                                <select class="form-control" name="ResolutionQuality" ng-model="FormUser.ResolutionQuality" required>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                </select>
+                            </div>
+                        </td>
+
+                        <td>
+                            <div class="shortField">
+                                <label>Engineer Professionalism</label>
+                                <select class="form-control" name="EngineerProfessionalism" ng-model="FormUser.EngineerProfessionalism" required>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                </select>
+                            </div>
+                        </td>
+
+                        <td>
+                            <div class="shortField">
+                                <label>Responsiveness</label>
+                                <select class="form-control" name="Responsiveness" ng-model="FormUser.Responsiveness" required>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                </select>
+                            </div>
+                        </td>
+
+                        <td>
+                            <div class="shortField">
+                                <label>Resolution Timeliness</label>
+                                <select class="form-control" name="ResolutionTimeliness" ng-model="FormUser.ResolutionTimeliness">
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                </select>
+                            </div>
+                        </td>
+                    </tr>
+                    <!-- 5th Row -->
+                    <tr>
+                        <td colspan="3">
+                            <div class="longField">
+                                <label>Customer's Comments</label>
+                                <textarea class="form-control" name="CustomerComments" ng-model="FormUser.CustomerComments" required placeholder="Comments from Customer..."></textarea>
+                            </div>
+                        </td>
+
+                        <td colspan="3">
+                            <div class="longField">
+                                <label>Actions done by the Engineer/Engineers</label>
+                                <textarea class="form-control" name="EngineerAction" ng-model="FormUser.EngineerAction" required placeholder="Engineer's Actions"></textarea>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- 6th Row -->
+                    <tr>
+                        <td colspan="3">
+                            <div class="genericField">
+                                <label>What should have been done?</label>
+                                <textarea class="form-control" name="AlternativeAction" ng-model="FormUser.AlternativeAction" required></textarea>
+                            </div>
+                        </td>
+
+                        <td colspan="3">
+                            <div class="genericField">
+                                <label>Overall impression from the Survey</label>
+                                <textarea class="form-control" name="Impression" ng-model="FormUser.Impression" required></textarea>
+                            </div>
+                        </td>
+                        <!-- <td colspan="2"></td> -->
+                    </tr>
+
+                    <!-- 7th Row -->
+                    <tr>
+                        <td colspan="2">
+                            <div class="genericField">
+                                <label>Who is the Engineer that the Survey should be on?</label>
+                                <input type="text" class="form-control" name="RelevantEngineer" ng-model="FormUser.RelevantEngineer">
+                            </div>
+                        </td>
+
+                        <td colspan="2">
+                            <div class="genericField">
+                                <label>Performed Feedback to the Engineer?</label>
+                                <select class="form-control" name="FeedbackPerformed" ng-model="FormUser.FeedbackPerformed" required>
+                  <option value="Yes">Yes</option>
+                  <option value="No">No</option>
+                </select>
+                            </div>
+                        </td>
+
+                        <td colspan="2">
+                            <div class="genericField">
+                                <label>Is a Quality Audit needed on the Survey?</label>
+                                <select class="form-control" name="QANeeded" ng-model="FormUser.QANeeded" required>
+                  <option value="Yes">Yes</option>
+                  <option value="No">No</option>
+                </select>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- 8th Row -->
+                    <tr>
+                        <td colspan="2">
+                            <div class="genericField">
+                                <label>Engineer's feedback on the Survey</label>
+                                <textarea class="form-control" name="EngineerFeedback" ng-model="FormUser.EngineerFeedback" required></textarea>
+                            </div>
+                        </td>
+
+                        <td colspan="2">
+                            <div class="genericField">
+                                <label>Do we need to contact the customer regarding the Survey?</label>
+                                <select class="form-control" name="ContactCustomer" ng-model="FormUser.ContactCustomer" required>
+                  <option value="Yes">Yes</option>
+                  <option value="No">No</option>
+                </select>
+                            </div>
+                        </td>
+
+                        <td colspan="2">
+                            <div class="genericField">
+                                <label>Do we need to involve the CSM?</label>
+                                <select class="form-control" name="InvolveCSM" ng-model="FormUser.InvolveCSM" required>
+                  <option value="Yes">Yes</option>
+                  <option value="No">No</option>
+                </select>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- 9th Row -->
+                    <tr>
+
+                        <td colspan="2">
+                            <div class="genericField">
+                                <label>Summary of the call with the customer</label>
+                                <textarea class="form-control" name="CallSummary" ng-model="FormUser.CallSummary" required></textarea>
+                            </div>
+                        </td>
+
+                        <td colspan="2" bgcolor="lightYellow">
+                            <div class="genericField">
+                                <label id="emphasisColor">Cause for Bad Survey </label>
+                                <select class="form-control" name="Cause" ng-model="FormUser.Cause" required>
+                  <option value="Engineer's actions">Engineer's actions</option>
+                  <option value="Actions performed by other team">Actions performed by other team</option>
+                  <option value="Service unavailability">Service unavailability</option>
+                  <option value="Customer's expectation does not meet our standards">Customer's expectation does not meet our standards</option>
+                  <option value="Trial">Trial</option>
+                </select>
+                            </div>
+                        </td>
+
+                        <td colspan="2" bgcolor="lightYellow">
+                            <div class="genericField">
+                                <label id="emphasisColor">Has the Engineer taken the correct actions?</label>
+                                <select class="form-control" name="CorrectAction" ng-model="FormUser.CorrectAction" required>
+                  <option value="Yes">Yes</option>
+                  <option value="No">No</option>
+                </select>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="Button">
+                <button type="submit" class="btn btn-default" ng-disabled="disabled" data-toggle="collapse" data-target="#mainForm">Complete</button>
+            </div>
+        </form>
+    </div>
+
+
+
+    <div class="TableView">
+        <table class="table">
+            <tbody>
+                <tr ng-repeat="survey in SurveysList">
+                    <td>Ticket : {{survey.Ticket}}
+                        <div id="editForm{{survey._id}}" class="panel-collapse collapse">
+                            <div class="genericField">
+                                <label>Ticket Number</label>
+                                <input type="text" class="form-control" name="Ticket" ng-model="survey.Ticket" required placeholder="IM/SR">
+                                <button class="btn btn-default" ng-disabled="disabled" ng-click="update(survey._id, survey)" data-toggle="collapse" data-target="#editForm{{survey._id}}">update</button>
+                            </div>
+                        </div>
+                    </td>
+
+                    <td>Engineer: {{survey.Engineer}}</td>
+
+                    <td>
+                        <button class="btn btn-danger" ng-click="remove(survey._id)"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Remove</button>
+                        <button class="btn btn-warning" data-toggle="collapse" data-target="#editForm{{survey._id}}" ng-click="edit(survey._id)"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Edit</button>
+
+                    </td>
+
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+</body>

@@ -1,0 +1,21 @@
+module.exports = {
+  'user': require('./controllers/UserController'),
+  'home': require('./controllers/homecontroller'),
+  'SecurityMail':require('./controllers/mailcontroller'),
+  'login':require('./controllers/LoginController'),
+  'scorecard':require('./controllers/ScorecardController'),
+  'catalogitem':require('./controllers/CIController'),
+  'SecurityRequest': require ('./controllers/SecurityRequestController'),
+  'Surveys': require ('./controllers/SurveysController'),
+  'ftp':require('./controllers/FtpController'),
+  'ftpsurvey':require('./controllers/FtpController'),
+  'restartserver':require('./controllers/ServerMonitor'),
+  'onesurvey':require('./controllers/OneSurveyController'),
+  'getclosedtickets':require('./controllers/FtpController'),
+  'Ticket':require('./controllers/TicketController'),
+  'maxscore':require('./controllers/MaxScoreController'),
+  'averagescore':require('./controllers/AvgScoreController'),
+  'tickets_target':require('./controllers/TicketsTargetController'),
+  'survey_targets':require('./controllers/SurveyTargetsController'),
+  'Schedule': require('./controllers/ScheduleController')
+};

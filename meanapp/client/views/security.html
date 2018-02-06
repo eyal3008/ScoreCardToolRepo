@@ -1,0 +1,48 @@
+<div>
+
+    <form class="form" ng-submit="SubmitSurvey()">
+
+        <div class="form-group">
+            <label>Request Type</label>
+            <select class="form-control" name="RequestType" ng-model="FormUser.RequestType" required style="width:300px">
+            <option value="AST LAb">AST Lab</option>
+            <option value="New User">New User</option>
+              <option value="Decommission User">Decommission User</option>
+
+          </select>
+            <label>Login</label>
+            <input type="text" class="form-control" name="Login" ng-model="FormUser.Login" required style="width:300px">
+
+            <label>Email</label>
+            <input type="email" class="form-control" name="Email" ng-model="FormUser.Email" required style="width:300px">
+            <label>Password</label>
+            <input type="password" class="form-control" name="Password" ng-model="FormUser.Password" required style="width:300px">
+
+            <label>Position</label>
+            <select class="form-control" name="PositionName" ng-model="FormUser.PositionName" required style="width:300px">
+          <option value="SOC">SOC</option>
+          <option value="To-Infra">To-Infra</option>
+            <option value="DevOps-Portal">DevOps-Portal</option>
+
+        </select>
+        </div>
+
+        <button type="submit" class="btn btn-default" ng-disabled="disabled" data-toggle="collapse" data-target="#collapsetwo2">Complete</button>
+    </form>
+
+    <table class="table">
+        <tbody>
+
+            <tr ng-repeat="security in SecurityRequestList">
+                <td>
+                    Email : {{security.Email}} Type: {{security.RequestType}}
+                </td>
+
+
+            </tr>
+
+        </tbody>
+
+    </table>
+
+</div>

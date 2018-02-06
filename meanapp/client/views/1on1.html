@@ -1,0 +1,128 @@
+
+
+
+<div class="panel panel-info" style="overflow-x:auto">
+
+    <div class="panel-heading">
+        <center>
+            <h3>Fetching Live Data</h3>
+        </center>
+    </div>
+    <table class="table" cellspacing="5">
+        <thead>
+            <tr>
+
+                <center>
+                  <br />
+                  <font color="red" ng-if="!SecurityReady">Please Calculate Security before Srs!</font>
+                </center>
+                <ul>
+                  <li>
+                    <label class="labl" for="repeatSelect"> Select an Engineer </label>
+                    <select name="selectstyle" id="selectstyle" class="form-control" name="repeatSelect" ng-model="AddedEngineer">
+                      <option ng-repeat="engineer in UsersWithEngineerRole" value="{{engineer}}" >{{engineer.Name}}</option>
+                   </select>
+                  </li>
+                      <li>
+                        <button class="btn btn-info"  ng-click="CalcSecurity(AddedEngineer)" >Calculate Security <span style="color:green" ng-if="SecurityReady" class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
+
+                        </br>
+                              </br>
+                      </li>
+                        <li>
+                        <button class="btn btn-info"   ng-click="CalcSrs(AddedEngineer)" ng-disabled="!SecurityReady" ng-disabled="!HoursReady">Calculate Sr Per Day </button>
+                      </br>
+                             </br>
+                      </li>
+                               <li>
+                          <button class="btn btn-info"  ng-click="Qa()">Calculate Quality Audits</button>
+                        </br>
+                                </br>
+                        </li>
+                          <li>
+                            <button class="btn btn-info"  ng-click="CalcIms(AddedEngineer)" ng-disabled="!HoursReady">Calculate Im Per Day </button>
+                          </br>
+                                  </br>
+                          </li>
+                            <li>
+                              <button class="btn btn-info"  ng-click="Calculatesurvey(AddedEngineer)">Calculate Survey</button>
+
+                              </br>
+                                    </br>
+                            </li>
+                              <li>
+                                <button class="btn btn-info"  ng-click="updateSlo(AddedEngineer)">Calculate Update SLO</button>
+                              </br>
+                                      </br>
+                              </li>
+                                      <li>
+                                  <button class="btn btn-info"  ng-click="FtrnRes(AddedEngineer)">Calculate Ftr & Res <span style="color:green" ng-if="FtrnResReady" class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
+                                </li>
+                              </br>
+                                      </br>
+                                <li>
+                            <button class="btn btn-info"  ng-click="CalcMaxAvg()">Calculate Max & Average Scores <span style="color:green" ng-if="FtrnResReady" class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
+                          </li>
+                </ul>
+             </tr>
+        </thead>
+      </table>
+</div>
+
+
+<!-- <div class="panel panel-info" style="overflow-x:auto">
+
+    <div class="panel-heading">
+        <center>
+            <h3>One on One</h3>
+        </center>
+    </div>
+    <table class="table" cellspacing="5">
+        <thead>
+            <tr>
+
+                <center>
+                  <br />
+                  <font color="red" ng-if="!SecurityReady">Please Calculate Security before Srs!</font>
+                </center>
+                <ul>
+                      <li>
+                        <button class="btn btn-info"  ng-click="CalcSecurity()" >Calculate Security <span style="color:green" ng-if="SecurityReady" class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
+
+                        </br>
+                              </br>
+                      </li>
+                        <li>
+                        <button class="btn btn-info"   ng-click="CalcSrs()" ng-disabled="!SecurityReady" ng-disabled="!HoursReady">Calculate Sr Per Day </button>
+                      </br>
+                              </br>
+                      </li>
+                               <li>
+                          <button class="btn btn-info"  ng-click="Qa()">Calculate Quality Audits</button>
+                        </br>
+                                </br>
+                        </li>
+                          <li>
+                            <button class="btn btn-info"  ng-click="CalcIms()" ng-disabled="!HoursReady">Calculate Im Per Day </button>
+                          </br>
+                                  </br>
+                          </li>
+                            <li>
+                              <button class="btn btn-info"  ng-click="Calculatesurvey()">Calculate Survey</button>
+
+                              </br>
+                                    </br>
+                            </li>
+                              <li>
+                                <button class="btn btn-info"  ng-click="updateSlo()">Calculate Update SLO</button>
+                              </br>
+                                      </br>
+                              </li>
+                                      <li>
+                                  <button class="btn btn-info"  ng-click="FtrnRes()">Calculate Ftr & Res <span style="color:green" ng-if="FtrnResReady" class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
+                                </li>
+                </ul>
+             </tr>
+        </thead>
+      </table>
+</div> -->

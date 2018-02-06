@@ -1,0 +1,429 @@
+'use strict';
+
+MainApp.controller('1on1Controller', ['$scope', '$rootScope', '$location', '$http', function($scope, $rootScope, $location, $http) {
+
+
+
+
+
+  var GetDate = function() {
+
+      var today = new Date();
+      var dd = today.getDate();
+      var mm = today.getMonth() + 1; //January is 0!
+      var yyyy = today.getFullYear();
+
+      if (dd < 10) {
+          dd = '0' + dd
+      }
+      if (mm < 10) {
+          mm = '0' + mm
+      }
+      today = mm + '/' + dd + '/' + yyyy;
+      var arrayofdates = [today, dd, mm, yyyy];
+      return arrayofdates;
+  }
+
+
+    $scope.ReadyScorecard = {};
+    var DatesArray = GetDate();
+    console.log(DatesArray);
+    GetScheduleDay(DatesArray[2],DatesArray[3],$rootScope.activeUser.user.Name);
+    //get catalog items on first run
+    $http.get('catalogitem')
+        .success(function(response) {
+            $scope.catalogitems = response;
+        });
+
+    $scope.Months = ["January", "February", "March", "April", "May", "June",
+                   "July", "August", "September", "October", "November", "December"];
+
+    //get users list.
+    $http.get('/user')
+        .success(function(data) {
+
+            $scope.engineerslist = data;
+            //$scope.question = "";
+        });
+
+    function round(num) {
+        return Math.floor(num * 10) / 10;
+    }
+
+    //============================== Refresh ===================================
+    var refresh = function() {
+        $http.get('/1on1')
+            .success(function(response) {
+                $scope.oneonone = response;
+            });
+    };
+
+    //============================== Calculate Ranks Per Catalog ===============
+
+    var CalculateRanks = function(ResolvedItems) {
+
+        var sum = 0;
+        var j;
+        var entry;
+        for (var i = 0; i < ResolvedItems.length; i++) {
+
+            for (j = 0; j < $scope.catalogitems.length; j++) {
+
+                entry = $scope.catalogitems[j];
+
+                if (entry.title == ResolvedItems[i]) {
+                    console.log(entry.title + ' ' + ResolvedItems[i]);
+                    sum += parseInt(entry.rank);
+                    console.log(typeof(sum));
+                    break;
+
+                }
+            }
+
+            if (j == $scope.catalogitems.length) {
+                console.log('unrecognized');
+                sum += 2;
+            }
+        }
+        return sum;
+
+    };
+
+
+
+    var CalculateEngineerClosedTickets = function(engineer, array) {
+
+        var NewName = CastName(engineer);
+        var EngineerTickets = array.filter(ticket => ticket.ASSIGNEE_NAME == NewName);
+
+        var filteredArray = EngineerTickets.filter(function(item, pos) {
+            return EngineerTickets.indexOf(item) == pos;
+        });
+
+        console.log(filteredArray);
+
+        var EngineerClosedTickets = $filter('unique')(filteredArray, "TICKET_NUMBER");
+
+        return EngineerClosedTickets;
+
+    }
+
+    //============================== Calculate Ims Per Day =====================
+
+
+    var ImsPerDayfunc = function(days, ResolvedItems) {
+
+        $scope.IMSPerDay = CalculateRanks(ResolvedItems) / days;
+        $scope.totalIms = CalculateRanks(ResolvedItems);
+    };
+
+    //============================== Calculate SRs Per Day =====================
+
+    var SrsPerDayfunc = function(days, resolvedItems, securityItems) {
+        $scope.SrSPerDay = (CalculateRanks(resolvedItems) + CalculateRanks(securityItems)) / days;
+        // $scope.totalIms = CalculateRanks(ResolvedItems,ranks);
+    };
+
+    $scope.Calculatesurvey = function() {
+
+
+        var i = 1; //  set your counter to 1
+
+        function myLoop() { //  create a loop function
+            setTimeout(function() { //  call a 3s setTimeout when the loop is called
+                CalcSurvey($scope.engineerslist[i].Name); //  your code here
+                i++; //  increment the counter
+                if (i < $scope.engineerslist.length) { //  if the counter < 10, call the loop function
+                    myLoop(); //  ..  again which will trigger another
+                } //  ..  setTimeout()
+            }, 10000)
+        }
+        myLoop();
+    }
+
+    var Parser = function(array, string, month, engineer) {
+        var CatalogItemArray = [];
+
+        for (var i = 0; i < array.length; i++) {
+            if ((array[i]["ASSIGNEE_NAME"]) == engineer) {
+
+                if ((array[i]["CLOSE_DATE"])
+                    .substring(5, 7) == month) {
+                    console.log("Found " + array[i]["TICKET_NUMBER"])
+
+                    if ((array[i]["TICKET_NUMBER"])
+                        .charAt(0) == string) {
+
+                        CatalogItemArray.push(array[i]["CATALOG_ITEM"]);
+                    }
+                }
+            }
+        }
+        return CatalogItemArray;
+    }
+
+    $scope.LookUp = function(SelectedEngineer, SelectedMonth) {
+
+
+    }
+
+    //  $http.get('/user?Role=engineer').success(function(data) {
+    //
+    //   var engineerslist = data;
+    //
+    //
+    //  });
+$scope.ImsnSrs = function (){
+
+var CurrentMonth = 12;
+
+$http.get('/getclosedtickets')
+    .success(function(response) {
+        console.log(response)
+        console.log(response[0]["CLOSE_DATE"].substring(5, 7));
+        for (var i = 0; i < response.length; i++) {
+
+            if (response[i]["CLOSE_DATE"].substring(5, 7) == CurrentMonth)
+                testarray.push(response[i]);
+        }
+        console.log(testarray.length);
+
+        for (var m = 0; m < $scope.engineerslist.length; m++) {
+            console.log($scope.engineerslist[m].Name);
+            if()
+            var x = CalculateEngineerClosedTickets($scope.engineerslist[m].Name, testarray);
+            console.log(x);
+            var ImArray = Parser(x, 'I', CurrentMonth, CastName($scope.engineerslist[m].Name));
+
+            //calculate IMs per day
+
+
+            ImsPerDayfunc(18.31, ImArray);
+            console.log(+" " + $scope.IMSPerDay);
+
+            //update Ims per day on DB, per scorecard
+            UpdateImsPerDayOnDB($scope.IMSPerDay, SelectedMonth, $scope.engineerslist[m].Name);
+        }
+
+    });
+}
+
+function UpdateImsPerDayOnDB(Imsperday, Month, SelectedEngineer) {
+var Found = false;
+
+
+
+    $http.get('/scorecard?Name=' + SelectedEngineer + '', {
+
+
+        })
+        .success(function(response) {
+            var Selectedscorecard = response;
+            console.log('scorecard is  ' + Selectedscorecard);
+            var KpiArray = Selectedscorecard[0].KPIs;
+            console.log(KpiArray);
+            var ID_temp = Selectedscorecard[0]._id;
+
+            for (var i = 0; i < KpiArray.length; i++) {
+                if (KpiArray[i].Month == Month) {
+                    Found = true;
+                    KpiArray[i].Im = parseFloat(Imsperday)
+                        .toFixed(2);
+                }
+            }
+if (Found == true)
+{
+            Selectedscorecard[0].KPIs = KpiArray;
+            console.log(KpiArray);
+            console.log(Selectedscorecard);
+
+            $http.put('/scorecard/' + ID_temp, Selectedscorecard[0])
+                .success(function(response) {
+                    console.log(response);
+                });
+}
+else{
+Selectedscorecard[0].KPIs = KpiArray;
+console.log(KpiArray);
+console.log(Selectedscorecard);
+
+$http.post('/scorecard', Selectedscorecard[0])
+  .success(function(response) {
+      console.log(response);
+  });
+
+}
+        });
+}
+    $scope.Calculate = function(Month) {
+
+        $scope.IMSPerDay = 0;
+        $scope.SrSPerDay = 0;
+
+        var config = {
+            params: {
+                Month: Month,
+                UserId: 'Mohamad Massalha'
+            }
+        }
+
+        $http.get('http://15.224.229.39:3001/audit', config)
+            .success(function(response) {
+
+                var sumscore = 0;
+                var i = 0;
+                for (i = 0; i < response.length; i++) {
+                    sumscore = parseInt(response[i].Score) + sumscore;
+                }
+                // $scope.currentEngineerQAAverage = round(sumscore/i);
+            });
+
+        ImsPerDayfunc(7, MohamadIms);
+        console.log($scope.IMSPerDay);
+        SrsPerDayfunc(7, KassamSr, kassamSec);
+        console.log($scope.SrSPerDay);
+    }
+
+    var CastName = function(Name) {
+        var name = Name.split(' ');
+        var NewName = (name[0] + '.' + name[1]);
+        return NewName.toLowerCase();
+
+    }
+
+
+    var CalcSurvey = function(engineer) {
+        console.log(engineer);
+        var NewName = CastName(engineer);
+        console.log(NewName);
+
+        var BadTicketsArray = [];
+        var BadTicket = {};
+        var ResG = 0;
+        var ResB = 0;
+        var ProfG = 0;
+        var ProfB = 0;
+        var OverG = 0;
+        var OverB = 0;
+        var QualityG = 0;
+        var QualityB = 0;
+        var TimelinessG = 0;
+        var TimelinessB = 0;
+
+        $http.get('/ftpsurvey')
+            .success(function(response) {
+
+
+                for (var i = 0; i < response.length; i++) {
+                    if (response[i]["Assignee Name"] == NewName) {
+                        console.log(NewName);
+
+                        switch (response[i]["Question Name"]) {
+
+                            case 'Resolution Timeliness':
+                                if (parseInt(response[i]["Answer Rating"]) < 3) {
+                                    TimelinessB++;
+
+
+                                } else {
+                                    TimelinessG++
+                                }
+                                break;
+
+                            case 'Overall Support Experience':
+                                if (parseInt(response[i]["Answer Rating"]) < 3) {
+                                    OverB++;
+
+                                } else {
+                                    OverG++
+                                }
+                                break;
+
+                            case 'Resolution Quality':
+                                if (parseInt(response[i]["Answer Rating"]) < 3) {
+                                    QualityB++;
+
+                                } else {
+                                    QualityG++
+                                }
+                                break;
+
+                            case 'Engineer Professionalism':
+                                if (parseInt(response[i]["Answer Rating"]) < 3) {
+                                    console.log(response[i]["Answer Rating"])
+                                    ProfB++;
+
+                                } else {
+                                    console.log(response[i]["Answer Rating"])
+                                    ProfG++
+                                }
+                                break;
+
+                            case 'Responsiveness':
+                                if (parseInt(response[i]["Answer Rating"]) < 3) {
+                                    ResB++;
+
+                                } else {
+                                    ResG++
+                                }
+                                break;
+                        }
+                    }
+                }
+
+                $scope.onesurvey = { "Engineer": NewName, "Month": "May", "mysurveys": [{ "ResponsivenessB": ResB, "ResponsivenessG": ResG, "OverallG": OverG, "OverallB": OverB, "ProfB": ProfB, "ProfG": ProfG, "QualityG": QualityG, "QualityB": QualityB, "TimelinessG": TimelinessG, "TimelinessB": TimelinessB }] };
+
+                $http.post('/onesurvey', $scope.onesurvey)
+                    .then(function(response) {
+
+                        console.log(response);
+
+                    });
+            });
+
+    }
+
+    ///////////////////////// SCHEDULE /////////////////////////////
+    function GetScheduleDay(SelectedMonth, SelectedYear, SelectedEngineer) {
+        // build my object to get the days on queue
+        var EngineerInfo = { "EngineerList": [SelectedEngineer], "Month": SelectedMonth, "Year": SelectedYear };
+        console.log(EngineerInfo);
+        $http.post('/GetLiveHours', EngineerInfo)
+            .success(function(response) {
+                console.log(response);
+              UpdateSchedule(response,SelectedMonth);
+            });
+    }
+
+  var UpdateSchedule = function(NewSchedule, Month){
+    console.log(NewSchedule)
+    $http.get('/Schedule?Engineer='+$rootScope.activeUser.user.Name+'&Month='+Month+'')
+        .success(function(response) {
+          console.log(response);
+          if(response.length == 0){
+            console.log("first time on schedule");
+
+            $http.post('/Schedule', NewSchedule)
+                .success(function(responseNew) {
+                    console.log(responseNew);
+                });
+          }
+            else {
+              console.log(response);
+              var ID_temp = response[0]._id;
+    console.log(ID_temp);
+      console.log(NewSchedule);
+            $http.put('/Schedule/'+ ID_temp, NewSchedule)
+                .success(function(responseNew) {
+                    console.log(responseNew);
+                });
+              }
+        });
+
+  }
+
+
+
+
+
+        }]);

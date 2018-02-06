@@ -1,0 +1,196 @@
+<div class="panel panel-info" style="overflow-x:auto">
+
+    <div class="panel-heading">
+        <center>
+            <h2><b>Hello {{firstName}}!</b></h2>
+        </center>
+    </div>
+</div>
+
+
+<div ng-if="activeUser.user.Role != 'engineer'" class="container" ng-controller="HomeController">
+  <table class="table table-responsive">
+      <div class="container">
+    	<div class="row">
+
+    		<center><h2><b> Overall View Team Current ScoreCard <b></h2></center>
+
+    		<table class="points_table">
+    			<thead>
+    				<tr>
+    					<th class="col-xs-1">#</th>
+    					<th class="col-xs-3">Engineer name</th>
+    					<th class="col-xs-2">IMs Per Day</th>
+    					<th class="col-xs-2">SRs Per Day</th>
+    					<th class="col-xs-1">FTR</th>
+              <th class="col-xs-1">Resolution</th>
+    					<th class="col-xs-2">Update SLO</th>
+    				</tr>
+    			</thead>
+
+    			<tbody class="points_table_scrollbar">
+
+            <tr ng-repeat="score in scorecardData" ng-controller="HomeController" ng-class-odd="'odd'" ng-class-even="'even'" >
+
+
+    					<td class="col-xs-1">{{score.place}}</td>
+    					<td class="col-xs-3">{{score.engineer}}</td>
+    					<td class="col-xs-2">{{score.KPIs.Im}}</td>
+    					<td class="col-xs-2">{{score.KPIs.Sr}}</td>
+    					<td class="col-xs-1">{{score.KPIs.Ftr}}</td>
+    					<td class="col-xs-1">{{score.KPIs.Resolution}}</td>
+              <td class="col-xs-2">{{score.KPIs.Update}}</td>
+
+            </tr>
+
+
+
+    			</tbody>
+    		</table>
+    	</div>
+    </div>
+    </table>
+</div>
+<div ng-if="activeUser.user.Role == 'engineer'" class="container" ng-controller="MonthlyController">
+
+  <center>
+<h3><b>
+Your performance from the beginning of this month up to current date.
+</b></br></br></h3>
+</center>
+
+    <div class="row">
+        <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3">
+
+            <!-- PRICE ITEM -->
+            <div class="panel price panel-red">
+                <div class="panel-heading  text-center">
+                    <h3>IMs Closed Tickets</h3>
+                </div>
+
+                <ul class="list-group list-group-flush text-center" style="font-size:40px">
+
+                    <li><strong>{{curentscorecard.Im}}</strong></li>
+
+
+                </ul>
+                <div class="panel-footer">
+                    <center>
+                        <p style="color: Black"></p>
+                    </center>
+                </div>
+                <!-- /PRICE ITEM -->
+
+
+            </div>
+        </div>
+
+        <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3">
+
+            <!-- PRICE ITEM -->
+            <div class="panel price panel-blue">
+                <div class="panel-heading arrow_box text-center">
+                    <h3>SRs Closed Tickets</h3>
+                </div>
+
+                <ul class="list-group list-group-flush text-center" style="font-size:40px">
+
+                    <li><strong>{{curentscorecard.Sr}}</strong></li>
+
+                </ul>
+                <div class="panel-footer">
+                    <p></p>
+                </div>
+            </div>
+            <!-- /PRICE ITEM -->
+
+
+        </div>
+
+        <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3">
+
+            <!-- PRICE ITEM -->
+            <div class="panel price panel-green">
+                <div class="panel-heading arrow_box text-center">
+                    <h3>FTR</h3>
+                </div>
+
+                <ul class="list-group list-group-flush text-center" style="font-size:40px">
+
+                    <font ng-class="{ 'Score-red': curentscorecard.Ftr < FTRtarget , 'Score-green': curentscorecard.Ftr > FTRtarget }">
+                        <li><strong>{{curentscorecard.Ftr}}%</strong></li>
+                    </font>
+
+                </ul>
+                <div class="panel-footer">
+                    <center>
+                        <strong>  <p style="color: Black">Target: {{FTRtarget*100}}%</p></strong>
+                    </center>
+                </div>
+            </div>
+            <!-- /PRICE ITEM -->
+
+
+        </div>
+
+        <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3">
+
+            <!-- PRICE ITEM -->
+            <div class="panel price panel-grey">
+                <div class="panel-heading arrow_box text-center">
+                    <h3>Update SLO</h3>
+                </div>
+
+                <ul class="list-group list-group-flush text-center" style="font-size:40px">
+
+                    <font ng-class="{ 'Score-red': curentscorecard.Update < Updatetarget , 'Score-green': curentscorecard.Update > Updatetarget}">
+                        <li><strong>{{curentscorecard.Update}}%</strong></li>
+                    </font>
+
+                </ul>
+                <div class="panel-footer">
+                    <center>
+                        <strong>  <p style="color: Black">Target: {{Updatetarget*100}}%</p></strong>
+                    </center>
+                </div>
+            </div>
+            <!-- /PRICE ITEM -->
+
+
+        </div>
+
+
+
+        <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3">
+
+            <!-- PRICE ITEM -->
+            <div class="panel price panel-white">
+                <div class="panel-heading arrow_box text-center">
+                    <h3>Resolution</h3>
+                </div>
+
+                <ul class="list-group list-group-flush text-center" style="font-size:40px">
+
+                    <font ng-class="{ 'Score-red': curentscorecard.Resolution < Resolutiontarget , 'Score-green': curentscorecard.Resolution > Resolutiontarget}">
+                        <li><strong>{{curentscorecard.Resolution}}%</strong></li>
+                    </font>
+
+                </ul>
+                <div class="panel-footer">
+                    <center>
+                        <strong>  <p style="color: Black">Target: {{Resolutiontarget*100}}%</p></strong>
+                    </center>
+                </div>
+            </div>
+            <!-- /PRICE ITEM -->
+
+
+        </div>
+
+
+
+
+
+    </div>
+
+</div>

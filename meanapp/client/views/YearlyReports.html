@@ -1,0 +1,255 @@
+<div>
+
+
+    <style>
+        table,
+        td {
+            border: 1px solid black;
+        }
+
+    </style>
+
+    <table class='table borderless'>
+
+        <div class="panel panel-info" style="overflow-x:auto">
+
+            <div class="panel-heading">
+                <center>
+                    <h3><b>Yearly Reports</b></h3>
+                </center>
+            </div>
+
+
+            <thead>
+                <!-- The main Panel : Where the Admin select Engineer and then select a scpecific month to review his performance-->
+                <tr ng-if="activeUser.user.Role != 'engineer'">
+                    <th>
+                        <label class="labl" for="repeatSelect"> Select an Engineer </label>
+                        <select name="selectstyle" id="selectstyle" class="form-control" name="repeatSelect" ng-model="AddedEngineer">
+                     <option ng-repeat="engineer in engineerslist | filter: { Role: 'engineer'} " value="{{engineer}}" >{{engineer.Name}}</option>
+                  </select>
+                    </th>
+                    <th>
+                        <button style="position: center;" class="btn btn-info" ng-click="getYearlyReprots(AddedEngineer)"><b>Review reports</b></button>
+
+                    </th>
+
+
+                </tr>
+                <tr>
+                    <div class="panel-heading arrow_box text-center">
+                        <h3><strong style="color:blue"> Where focus goes, energy flows and results show !</strong></h3>
+                    </div>
+
+                </tr>
+
+            </thead>
+        </div>
+    </table>
+    <table style="width=100%">
+        <tr>
+
+            <!--***************************start of the IM BOX***********************************
+    Using angular charts - the data configured in the ReportsController.js file
+  ******************************* IMs Charts *******************************************-->
+            <td>
+                <div class="chart-style" style="position: relative">
+
+                    <canvas id="IMs Per Day" class="chart chart-line" chart-data="IM_data" chart-labels="labels" chart-series="series" chart-click="onClick" chart-options="IM_Options" chart-colors="colors"></canvas>
+
+
+
+
+            </div>
+            </td>
+
+            <!--*********************************************************************************
+                              End of the IM BOX
+************************************** *******************************************-->
+
+            <!--*************************************************************************
+                          Start of SR Charts
+**************************************************************************-->
+            <td>
+                <div class="chart-style">
+
+                    <canvas id="SR Per Day" class="chart chart-line" chart-data="SR_data" chart-labels="labels" chart-series="series" chart-click="onClick" chart-options="SR_Options" chart-colors="colors"></canvas>
+
+
+            </td>
+            </div>
+
+            <!--*********************************************************************
+                     End of the SR chart Box
+************************************************************************-->
+
+            <!--*************************************************************************
+                          Start of another Chart
+**************************************************************************-->
+
+            <td>
+                <div class="chart-style">
+
+                    <canvas id="Goal" class="chart-bar" chart-options="target_Options" chart-series="KPIs" chart-data="target" chart-labels="KPIs_labels" chart-colors="colors">
+    </canvas>
+
+                </div>
+
+            </td>
+
+        </tr>
+        <!--*********************************************************************
+                     End of the another chart Box
+                     and starting with new Row
+************************************************************************-->
+        <!--*************************************************************************
+                          Start of the Surveys Chart
+                          2nd Row 1st Col
+**************************************************************************-->
+        <tr>
+            <td>
+                <div class="chart-style">
+
+                    <canvas id="Surveys" class="chart chart-line" chart-data="surveys_data" chart-labels="labels" chart-series="series_1" chart-click="onClick" chart-options="Surveys_Options" chart-colors="colors"></canvas>
+
+
+                </div>
+            </td>
+
+            <!--*********************************************************************
+                     End of the Surveys chart Box
+************************************************************************-->
+            <!--*************************************************************************
+                          Start of Days in Q  Chart-
+                           2nd Row 2nd Col
+
+**************************************************************************-->
+
+            <td>
+                <div class="chart-style" style="position: relative">
+                    <canvas id="Days in Q " class="chart chart-line" chart-data="days_data" chart-labels="labels" chart-series="days" chart-click="onClick" chart-options="days_Options" chart-colors="colors"></canvas>
+                </div>
+            </td>
+
+            <!--*********************************************************************
+                           End of the DaysinQ chart Box
+      ************************************************************************-->
+            <!--*************************************************************************
+                                Start of Resolution Chart-
+                                 2nd Row 3rd Col
+      **************************************************************************-->
+
+            <td>
+                <div class="chart-style">
+
+                    <canvas id="Resolution" class="chart chart-line" chart-data="Res_data" chart-labels="labels" chart-series="series_1" chart-click="onClick" chart-options="Res_Options" chart-colors="colors"></canvas>
+                </div>
+            </td>
+        </tr>
+
+        <!--*********************************************************************
+                           End of the  Resolution  chart Box
+                           End of the 2nd Row of the table
+        ************************************************************************-->
+
+        <!--*********************************************************************
+                           Start with the QA chart Box
+                            3rd Row 1st Col
+      ************************************************************************-->
+        <tr>
+            <td>
+                <div class="chart-style">
+
+                    <canvas id="QA" class="chart chart-line" chart-data="QA_data" chart-labels="labels" chart-series="series_1" chart-click="onClick" chart-options="QA_Options" chart-colors="colors"></canvas>
+
+                </div>
+            </td>
+
+            <!--*********************************************************************
+                     End of the QA chart Box
+  ************************************************************************-->
+            <!--*********************************************************************
+                       Start with theTotal Score chart Box
+                        3rd Row 2nd Col
+  ************************************************************************-->
+            <td>
+                <div class="chart-style">
+
+                    <canvas id="Total Score" class="chart chart-line" chart-data="Total_data" chart-labels="labels" chart-series="series_1" chart-click="onClick" chart-options="Total_Options" chart-colors="colors"></canvas>
+
+                </div>
+            </td>
+            <!--*********************************************************************
+                     End of the Total chart Box
+  ************************************************************************-->
+            <!--*********************************************************************
+                       Start with Rank chart Box
+                        3rd Row 3rdd Col
+  ************************************************************************-->
+
+            <td>
+                <div class="chart-style">
+
+                    <canvas id="Rank" class="chart chart-line" chart-data="rank_data" chart-labels="labels" chart-series="rank_series" chart-click="onClick" chart-options="Rank_Options" chart-colors="colors"></canvas>
+
+
+                </div>
+            </td>
+        </tr>
+        <!--*********************************************************************
+                     End of the Rank chart
+    ************************************************************************-->
+        <!--*********************************************************************
+                     Start with the FTR Score chart Box
+                      4th Row 1st Col
+************************************************************************-->
+        <tr>
+            <td>
+                <div class="chart-style">
+                    <canvas id="FTR" class="chart chart-line" chart-data="ftr_data" chart-labels="labels" chart-series="series_1" chart-click="onClick" chart-options="FTR_Options" chart-colors="colors"></canvas>
+
+                </div>
+            </td>
+            <!--*********************************************************************
+                     End of the FTR chart
+    ************************************************************************-->
+
+            <!--*********************************************************************
+                     Start with the SLO Score chart Box
+                      4th Row 2nd Col
+************************************************************************-->
+            <td>
+
+                <div class="chart-style">
+
+                    <canvas id="SLO" class="chart chart-line" chart-data="slo_data" chart-labels="labels" chart-series="series_1" chart-click="onClick" chart-options="SLO_Options" chart-colors="colors"></canvas>
+
+
+                </div>
+            </td>
+            <!--*********************************************************************
+                     End of the SLO chart
+    ************************************************************************-->
+
+            <!--*********************************************************************
+                     Start with the Status chart Box
+                      4th Row 3rd Col
+************************************************************************-->
+
+            <td>
+
+
+                <div class="chart-style">
+
+                    <canvas id="status" class="chart-bar" chart-options="status_Options" chart-series="KPIs" chart-data="status_data" chart-labels="KPIs_labels" chart-colors="colors" chart-dataset-override="datasetOverride">
+  </canvas>
+
+                </div>
+            </td>
+            <!--*********************************************************************
+                    End of the Status Chart
+************************************************************************-->
+        </tr>
+
+    </table>
+</div>

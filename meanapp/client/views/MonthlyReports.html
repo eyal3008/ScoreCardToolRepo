@@ -1,0 +1,497 @@
+
+
+
+<table class='table borderless'>
+
+
+    <div class="panel panel-info" style="overflow-x:auto">
+
+        <div class="panel-heading">
+            <center>
+                <h3><b>Monthly Reports</b></h3>
+            </center>
+        </div>
+
+
+        <thead>
+            <!-- The main Panel : Where the Admin select Engineer and then select a scpecific month to review his performance-->
+            <tr ng-if="activeUser.user.Role != 'engineer'">
+                <th>
+                    <label class="labl" for="repeatSelect"> Select an Engineer </label>
+                    <select name="selectstyle" id="selectstyle" class="form-control" name="repeatSelect" ng-model="AddedEngineer">
+                      <option ng-repeat="engineer in engineerslist | filter: { Role: 'engineer'} " value="{{engineer}}" >{{engineer.Name}}</option>
+                   </select>
+
+                </th>
+                <th>
+                    <label for="repeatSelect"> Select Month </label>
+                    <select name="selectstyle" id="selectstyle" class="form-control" name="repeatSelect" ng-model="SelectedMonth">
+                        <option ng-repeat="month in Months " >{{month}}</option>
+                      </th>
+               <th>
+                        <button  style="position: center;" class="btn btn-info"  ng-click="LookUp(AddedEngineer, SelectedMonth)"><b>Review reports</b></button>
+
+                 </th>
+              </tr>
+
+
+              <tr ng-if="activeUser.user.Role == 'engineer'">
+                <th ng-if="activeUser.user.Role != 'engineer'">
+             <label class="labl" for="repeatSelect"> Select an Engineer </label>
+               <select name="selectstyle" id="selectstyle" class="form-control" name="repeatSelect"  ng-model = "AddedEngineer">
+                  <option ng-repeat="engineer in engineerslist | filter: { Role: 'engineer'} " value="{{engineer}}" >{{engineer.Name}}</option>
+               </select>
+
+                </th>
+                <th>
+                    <label for="repeatSelect"> Select Month </label>
+                    <select name="selectstyle" id="selectstyle" class="form-control" name="repeatSelect" ng-model="SelectedMonth">
+                    <option ng-repeat="month in Months " >{{month}}</option>
+                  </th>
+           <th>
+                    <button ng-if="activeUser.user.Role == 'engineer'"  style="position: center;" class="btn btn-info"  ng-click="LookUpEngineer(SelectedMonth)"><b>Review My Reports</b></button>
+             </th>
+          </tr>
+
+         </thead>
+       </div>
+
+</table>
+     </table>
+
+ <!--  The Graphs  -->
+
+
+
+<!-- **************************************************************************
+- The First Raw : Contain the IMS, SRs charts, the SCore of the scorecard and the Rank
+-
+-**************************************************************************-->
+
+
+  <section id="bs-pricing-five" class="bs-pricing-five p-top-100 bg-white" style="overflow-x:auto">
+
+      <div class="container">
+           <div class="row">
+
+
+               <!--
+                      IMs Per Day chart
+             -->
+                     <div class="bs-five-area bs-radius">
+                       <td>
+                         <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+
+
+               					<div class="panel price panel-blue">
+               						<div class="panel-heading  text-center">
+               						<h3>IMs Per day</h3>
+               						</div>
+
+                              <table class='table borderless' style="text-align:left">
+
+                                <tr>
+                                  <th>Your Score </th>
+                                  <th>{{ims}}</th>
+                                </tr>
+
+                                <tr>
+                                  <th>SOC Average </th>
+                                  <th> {{avgIm}} </th>
+                                </tr>
+
+                                <tr>
+                                  <th>The MaX Score </th>
+                                  <th> {{maxIm}} </th>
+                                </tr>
+                              </table>
+                              <div class="chart-style" style="position: relative">
+                              <canvas id="IM" class="chart chart-bar" chart-click="onClick" chart-data="IM_data" chart-labels="IM_labels" chart-series="series1" chart-options="Options" chart-colors="colors">
+                          </canvas>
+                        </div>
+
+
+               				</div>
+                    </div>
+
+                      <!--
+                             SRs Per Day chart
+                    -->
+                      <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+
+
+                     <div class="panel price panel-blue">
+                       <div class="panel-heading  text-center">
+                       <h3>SRs Per day</h3>
+                       </div>
+
+                        <table class='table borderless' style="text-align:left">
+
+                          <tr>
+                            <th>Your Score </th>
+                            <th>{{srs}}</th>
+                          </tr>
+
+                          <tr>
+                            <th>SOC Average </th>
+                            <th> {{avgSr}}</th>
+                          </tr>
+
+                          <tr>
+                            <th>The MaX Score </th>
+                            <th> {{maxSr}} </th>
+
+                          </tr>
+                          </table>
+                          <div class="chart-style" style="position: relative">
+                          <canvas id="SR" class="chart chart-bar" chart-click="onClick" chart-data="SR_data" chart-labels="IM_labels" chart-series="series1" chart-options="Options" chart-colors="colors">
+                      </canvas>
+                      </div>
+
+              </div></div>
+
+            </div>
+
+          </div>
+
+                   <!--
+                        Rank
+                 -->
+                 <div class="row">
+
+                   <div class="bs-five-area bs-radius">
+
+                     <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+
+
+                       <div class="panel price panel-blue">
+                        <div class="panel-heading  text-center">
+                        <h3>Resolution</h3>
+                        </div>
+
+                         <table class='table borderless' style="text-align:left">
+
+                           <tr>
+                             <th>Your Score</th>
+                             <th>{{resolution}}%</th>
+                           </tr>
+
+                           <tr>
+                             <th>SOC Average </th>
+                             <th>{{avgResolution}}% </th>
+                           </tr>
+
+                           <tr>
+                             <th>The MaX Score is</th>
+                             <th> {{maxResolution}}% </th>
+
+                           </tr>
+                           </table>
+
+                           <div class="chart-style" style="position: relative">
+                           <canvas id="Resolution" class="chart chart-bar" chart-data="resolution_data" chart-labels="IM_labels" chart-series="series1" chart-options="Options" chart-colors="colors">
+                           </canvas>
+                         </div>
+
+
+
+                   </div></div>
+
+                 <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+
+
+                   <div class="panel price panel-blue">
+                     <div class="panel-heading  text-center">
+                     <h3>Rank</h3>
+                     </div>
+
+
+                     <b style="font-size:280px">
+                        {{rank}}
+                      </b>
+
+
+
+
+               </div></div>
+
+               <!--
+                      Resolution chart
+             -->
+
+                 </div>
+
+               </div>
+
+
+               <!-- End of the first Raw -->
+                  <!-- **************************************************************************
+                      The second Row : includes : Resolution, FTR , Update SLO
+
+                  **************************************************************************  -->
+
+
+                   <div class="row">
+
+                     <div class="bs-five-area bs-radius">
+
+
+                   <!--
+                          FTR chart
+                 -->
+
+                   <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                   <div class="panel price panel-blue">
+                     <div class="panel-heading  text-center">
+                     <h3>FTR</h3>
+                     </div>
+
+                      <table class='table borderless' style="text-align:left">
+
+                        <tr>
+                          <th>Your Score</th>
+                          <th> {{ftr}}%</th>
+                        </tr>
+
+                        <tr>
+                          <th>SOC Average </th>
+                          <th> {{avgFtr}}% </th>
+                        </tr>
+
+                        <tr>
+                          <th>The MaX Score is</th>
+                          <th> {{maxFtr}}% </th>
+
+                        </tr>
+                        </table>
+
+                        <div class="chart-style" style="position: relative">
+                        <canvas id="FTR" class="chart chart-bar" chart-click="onClick" chart-data="ftr_data" chart-labels="IM_labels" chart-series="series1" chart-options="Options" chart-colors="colors">
+                    </canvas>
+                  </div>
+
+
+
+                </div></div>
+
+                <!--
+                    Update SLO chart
+              -->
+                <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                <div class="panel price panel-blue">
+                  <div class="panel-heading  text-center">
+                  <h3>Update SLO</h3>
+                  </div>
+
+                   <table class='table borderless' style="text-align:left">
+
+                     <tr>
+                       <th>Your Score</th>
+                       <th> {{updateslo}}%</th>
+                     </tr>
+
+                     <tr>
+                       <th>SOC Average </th>
+                       <th> {{avgUpdateSlo}}% </th>
+                     </tr>
+
+                     <tr>
+                       <th>The MaX Score is</th>
+                       <th> {{maxUpdataSlo}}% </th>
+
+                     </tr>
+                     </table>
+                     <div class="chart-style" style="position: relative">
+                     <canvas id="updateSLo" class="chart chart-bar" chart-data="updateslo_data" chart-labels="IM_labels" chart-series="series" chart-options="Options" chart-colors="colors">
+                     </canvas>
+                   </div>
+
+
+             </div></div>
+
+
+                  </div>
+                </div>
+
+                  <!-- End of the Sec Raw -->
+                    <!-- **************************************************************************
+
++                    Third Raw: Quality Audit, Survey
+
+-                    **************************************************************************  -->
+
+            <div class="row">
+
+                   <div class="bs-five-area bs-radius">
+
+                <!--
+                    Quality Audit chart
+              -->
+                 <div class="col-xs-6 col-sm-6 col-md-5 col-lg-5">
+                <div class="panel price panel-blue">
+                  <div class="panel-heading  text-center">
+                  <h3>Quality Audit</h3>
+                  </div>
+
+                   <table class='table borderless' style="text-align:left">
+
+                     <tr>
+
+                       <th>Your Score</th>
+                       <th> {{qa}} </th>
+
+                     </tr>
+
+                     <tr>
+                       <th>SOC Average </th>
+                       <th> {{avgQA}} </th>
+
+                      </tr>
+
+                     <tr>
+                       <th>The MaX Score is</th>
+                       <th> {{maxQA}} </th>
+
+
+                     </tr>
+
+                     <tr>
+                       <th >&nbsp; </th>
+                       <th>&nbsp; </th>
+
+                    </tr>
+                    <tr>
+                      <th>&nbsp; </th>
+                      <th>&nbsp; </th>
+
+                   </tr>
+                   <tr>
+                     <th>&nbsp; </th>
+                     <th>&nbsp; </th>
+
+                  </tr>
+
+
+                     </table>
+
+                     <div class="chart-style" style="position: relative">
+                     <canvas id="QA" class="chart chart-bar" chart-data="qa_data" chart-labels="IM_labels" chart-series="series" chart-options="Options" chart-colors="colors">
+                   </canvas>
+                 </div>
+
+
+             </div></div>
+
+
+                             <!--
+                                Survey chart
+                           -->
+                             <div class="col-xs-4 col-sm-4 col-md-7 col-lg-7">
+                             <div class="panel price panel-blue">
+                               <div class="panel-heading  text-center">
+                               <h3>Survey</h3>
+                               </div>
+
+                                <table class='table borderless' style="text-align:left">
+
+                                  <tr >
+                                    <th>Survey Average Score </th>
+                                    <th>  {{survey}}% </th>
+                                  </tr>
+
+                                  <tr>
+                                    <th>Professionalism</th>
+                                    <th> {{professionalism}} </th>
+                                  </tr>
+
+                                  <tr>
+                                    <th>Responsiveness </th>
+                                    <th> {{responsiveness}} </th>
+                                  </tr>
+
+                                  <tr>
+                                    <th>Resolution Quality</th>
+                                    <th> {{resolution_quality}} </th>
+
+                                  </tr>
+                                  <tr>
+                                    <th>Resolution Timelinees</th>
+                                    <th> {{resolution_time}} </th>
+                                  </tr>
+
+                                  <tr>
+                                    <th>Overall Support Experience</th>
+                                    <th> {{experience}} </th>
+
+                                  </tr>
+                                  </table>
+
+                                  <div class="chart-style" style="position: relative">
+                                  <canvas id="Survey" class="chart chart-bar" chart-data="survey_data" chart-labels="survey_labels" chart-series="survey_labels" chart-options="Options" chart-colors="colors">
+                                </canvas>
+                              </div>
+
+                          </div></div>
+
+                         </div></div>
+
+                    <!-- **************************************************************************
+
+                    Last raw: the All in one Graph
+-                    **************************************************************************  -->
+
+
+
+                    <div class="row">
+                      <div class="bs-five-area bs-radius">
+
+                                        <!--
+                                            Quality Audit chart
+                                      -->
+                                         <div class="col-xs-4 col-sm-4 col-md-6 col-lg-6">
+                                        <div class="panel price panel-blue">
+                                          <div class="panel-heading  text-center">
+                                          <h3>All in one bar chart</h3>
+                                          </div>
+                                          <ul>
+
+                                              <li>&nbsp;</li>
+                                              <li>&nbsp;</li>
+                                              <li>&nbsp;</li>
+                                            </ul>
+
+                                            <div class="chart-style" style="position: relative">
+                                             <canvas id="all_in_bar" class="chart chart-bar" chart-data="data" chart-options="Status_Options" chart-labels="labels" chart-series="series" chart-colors="status_color"> </canvas>
+                                           </div>
+
+
+                                     </div></div>
+
+
+                                        <!--
+                                            Quality Audit chart
+                                      -->
+                                           <div class="col-xs-4 col-sm-4 col-md-6 col-lg-6">
+                                        <div class="panel price panel-blue">
+                                          <div class="panel-heading  text-center">
+                                          <h3>All in Spider chart</h3>
+                                          </div>
+                                          <ul>
+                                            <li>&nbsp;</li>
+                                            <li>&nbsp;</li>
+                                            <li>&nbsp;</li>
+                                            </ul>
+                                            <div class="chart-style" style="position: relative">
+                                             <canvas id="radar" class="chart chart-radar" chart-data="data" chart-options="Spider_Options" chart-labels="labels" chart-series="series" chart-colors="status_color"> </canvas>
+                                           </div>
+
+
+                                     </div></div>
+
+
+
+                              </div></div>
+
+
+</div>
+       </section>
