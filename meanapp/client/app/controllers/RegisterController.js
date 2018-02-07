@@ -5,6 +5,18 @@ controller('RegisterController', ['$scope', '$rootScope', '$http', function($sco
 
 //creating the targets database in case there is nothing:
 
+$http.get('/survey_targets/').success(function(response)
+{
+  if(response.length==0)
+  {
+      $scope.CreateSurveyInDB();
+  }
+  else {
+    $scope.surveytList=response[0];
+    console.log($scope.surveytList);
+  }
+});
+
 
 $http.get('/tickets_target/')
     .success(function(response) {
@@ -12,12 +24,35 @@ $http.get('/tickets_target/')
       {
           $scope.CreateTargetInDB();
       }
+      else
+      {
+        $scope.targetList=response[0];
+        console.log($scope.targetList);
+      }
 });
 
 
+  $scope.CreateSurveyInDB=function(){
+
+    $scope.surveytList={
+      "Responsiveness":"20",
+      "Quality":"15",
+      "Timeliness":"15",
+      "Overall":"30",
+      "Professionalism":"20"
+
+    }
+    $http.post('/survey_targets/',$scope.surveytList).success(function(response)
+     {         console.log("Init the New target"+  $scope.surveytList)
+
+          });
+  }
+
+
+// init the Targets Database
 $scope.CreateTargetInDB=function()
 {
-  var NewTarget = {
+  $scope.targetList = {
 
       "Survey": "96",
       "Ftr": "99",
@@ -26,57 +61,17 @@ $scope.CreateTargetInDB=function()
       "UpdateSlo": "90"
 
   }
-  $http.post('/tickets_target/',NewTarget).success(function(response)
-   {
-          console.log("Init the New target"+NewTarget)
+  $http.post('/tickets_target/',$scope.targetList).success(function(response)
+   {         console.log("Init the New target"+  $scope.targetList)
 
         });
-
     }
 
-// SurveyTargetRead();
-
-//reading the surevey target or create a new one if there is not.
-// var SurveyTargetRead = function() {
-    //
-    // $http.get('/survey_targets/')
-    //     .success(function(response) {
-    //       console.log("In read func ");
-    //       var surveytarget=response;
-    //       //
-    //       if(surveytarget.length==0)
-    //       {
-    //         console.log("Empty ");
-    //
-    //         //create a new target in DB
-    //
-    //        surveytarget.ResponsivenessScore="20";
-    //         surveytarget.QualityScore= "15";
-    //         surveytarget.TimelinessScore="15";
-    //         surveytarget.ProfessionalismScore="20";
-    //         surveytarget.OverallScore="30";
-    //
-    //         $http.post('/survey_targets/',surveytarget).success(function(response) {
-    //
-    //           refresh();
-    //
-    //        });
-    //      }
-    //       else
-    //       {
-    //         console.log("Im not empty");
-    //
-    //       }
-    //         //console.log(response);
-    //         //$scope.survey= "";
-    //         //refresh();
-    //     });
-// }
 
 
     $scope.IsVisible = false;
     $scope.targetIsVisible = false;
-  //  $scope.surveyIsVisible=false;
+   $scope.surveyIsVisible=false;
 
     $scope.ShowHide = function() {
         //If DIV is visible it will be hidden and vice versa.
@@ -87,6 +82,89 @@ $scope.CreateTargetInDB=function()
             $scope.CiListFromDb = response;
 
         });
+
+        $scope.modifySurvey= function(){
+
+        $scope.modifySurveyField = true;
+        $scope.viewSurveyField = true;
+      };
+
+
+        $scope.updateSurvey= function(newTarget){
+          $scope.modifySurveyField = false;
+          $scope.viewSurveyField = false;
+
+          //console.log($scope.survey);
+          for(var i=0;i<newTarget.length;i++){
+          if(newTarget[i].targetName=="Professionalism")
+            $scope.surveytList.Professionalism=newTarget[i].value;
+          if(newTarget[i].targetName=="Responsiveness")
+            $scope.surveytList.Responsiveness=newTarget[i].value;
+          if(newTarget[i].targetName=="Resolution Quality")
+          $scope.surveytList.Quality=newTarget[i].value;
+          if(newTarget[i].targetName=="Resolution Timeliness")
+            $scope.surveytList.Timeliness=newTarget[i].value;
+          if(newTarget[i].targetName=="Overall support Experience")
+          $scope.surveytList.Overall=newTarget[i].value;
+        }
+          $http.put('/survey_targets/' +   $scope.SurveyId, $scope.surveytList)
+              .success(function(response) {
+                console.log(response);
+              });
+        }
+
+        $scope.modify = function(){
+
+        $scope.modifyField = true;
+        $scope.viewField = true;
+      };
+      $scope.updateTargets= function(newTarget){
+        $scope.modifyField = false;
+        $scope.viewField = false;
+
+        console.log($scope.targetList);
+        for (var i=0;i<newTarget.length;i++){
+        if(newTarget[i].targetName=="FTR SLO")
+          $scope.targetList.Ftr=newTarget[i].value;
+        if(newTarget[i].targetName=="Survey")
+          $scope.targetList.Survey=newTarget[i].value;
+        if(newTarget[i].targetName=="Update SLO")
+        $scope.targetList.UpdateSlo=newTarget[i].value;
+        if(newTarget[i].targetName=="Quality Audit")
+          $scope.targetList.Qa=newTarget[i].value;
+        if(newTarget[i].targetName=="Resolution")
+        $scope.targetList.Resolution=newTarget[i].value;
+      }
+        $http.put('/tickets_target/' + $scope.TargetId, $scope.targetList)
+            .success(function(response) {
+              console.log(response);
+            });
+
+      };
+
+
+      $scope.ShowHideSurveyList=function()
+      {
+          $scope.surveyIsVisible = $scope.surveyIsVisible ? false : true;
+      }
+
+      $http.get('/survey_targets')
+          .success(function(response) {
+            // var survey= response;
+            if(response.length>0){
+            $scope.SurveyId=response[0]._id;
+            $scope.survey=[];
+
+              $scope.survey.push({targetName:"Professionalism", value:response[0].Professionalism});
+              $scope.survey.push({targetName:"Responsiveness",value:response[0].Responsiveness});
+              $scope.survey.push({targetName:"Resolution Quality",value:response[0].Quality});
+              $scope.survey.push({targetName:"Resolution Timeliness",value:response[0].Timeliness});
+              $scope.survey.push({targetName:"Overall support Experience",value:response[0].Overall});
+              console.log("the Survey targets from the DB: "+  $scope.survey);
+            }
+      });
+
+
         /**********************************************************************
         *
         ***********************************************************************/
@@ -98,22 +176,18 @@ $scope.CreateTargetInDB=function()
         $http.get('/tickets_target')
             .success(function(response) {
               var targetList= response;
-                
-                $scope.TargetListFromDb = targetList;
+              $scope.TargetId=targetList[0]._id;
+              $scope.target=[];
+
+                $scope.target.push({targetName:"Quality Audit", value:targetList[0].Qa});
+                $scope.target.push({targetName:"Resolution",value:targetList[0].Resolution});
+                $scope.target.push({targetName:"Update SLO",value:targetList[0].UpdateSlo});
+                $scope.target.push({targetName:"FTR SLO",value:targetList[0].Ftr});
+                $scope.target.push({targetName:"Survey",value:targetList[0].Survey});
+                console.log("the targets from the DB: "+  $scope.target);
         });
 
 
-        //    });
-
-            // $scope.ShowHideSurveyList = function() {
-            //     //If DIV is visible it will be hidden and vice versa.
-            //     $scope.surveyIsVisible = $scope.surveyIsVisible ? false : true;
-            // }
-            // $http.get('/survey_targets')
-            //     .success(function(response) {
-            //         $scope.SurveyListFromDb = response;
-            //
-            //     });
 
     var UpdateCiList = function(CatalogItemObject) {
 

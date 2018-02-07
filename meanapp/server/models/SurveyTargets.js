@@ -3,35 +3,27 @@ var mongoose = require('mongoose');
 // Create the UserSchema.
 var SurveyTargetsSchema = new mongoose.Schema({
 
-  // targetName: {
-  //   type: String,
-  //   required: true
-  // },
-  // value: {
-  //   type: String,
-  //   required: true
-  // }
-ResponsivenessScore:{
+Responsiveness:{
   type: String,
   required: true,
   default: "0"
 },
-QualityScore:{
+Quality:{
   type: String,
   required: true,
   default: "0"
 },
-TimelinessScore:{
+Timeliness:{
   type: String,
   required: true,
   default: "0"
 },
-OverallScore:{
+Overall:{
   type: String,
   required: true,
   default: "0"
 },
-ProfessionalismScore:{
+Professionalism:{
   type: String,
   required: true,
   default: "0"
