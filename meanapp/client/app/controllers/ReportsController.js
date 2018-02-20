@@ -19,9 +19,22 @@ MainApp.controller('ReportsController', ['$scope', '$http', function($scope, $ht
     $scope.searchdata = ''; // set the default search/filter term
 
 
-    $scope.FTRtarget = 95;
-    $scope.Updatetarget = 90;
-    $scope.Resolutiontarget = 90;
+
+    $http.get('/tickets_target/')
+        .success(function(response) {
+          if(response.length==0)
+          {
+              console.log("Need to go to the Configurations ");
+          }
+          else
+          {
+            $scope.FTRtarget = response[0].Ftr;
+            $scope.Updatetarget =response[0].UpdateSlo;
+            $scope.Resolutiontarget = response[0].Resolution;
+          }
+    });
+
+
 
 
     /*
@@ -122,7 +135,7 @@ MainApp.controller('ReportsController', ['$scope', '$http', function($scope, $ht
                     for (var j = 0; j < KpiArray.length; j++) {
 
                         if (KpiArray[j].Month == Month) {
-                            
+
                             engineers[counter] = name;
 
                             sr_per_day[counter] = parseFloat(KpiArray[j].Sr);

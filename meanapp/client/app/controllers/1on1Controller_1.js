@@ -2,11 +2,12 @@
 
 MainApp.controller('1on1Controller', ['$scope', '$rootScope', '$location', '$http', '$filter', function($scope, $rootScope, $location, $http, $filter) {
 
+// cast the name same as Infra
   var CastName = function(GivenName) {
       var NewName="";
       var name = GivenName.split(' ');
 
-      for(var i = 0 ; i < name.length ; i++ ){
+     for(var i = 0 ; i < name.length ; i++ ){
 
     NewName = NewName + name[i] + ".";
     }
@@ -37,7 +38,7 @@ MainApp.controller('1on1Controller', ['$scope', '$rootScope', '$location', '$htt
                 console.log($scope.UsersWithEngineerRole)
             });
 
-
+            // Caclulating the Security Requests
     $scope.CalcSecurity = function(AddedEngineer) {
       console.log(AddedEngineer);
             $scope.SecurityReady = false;
@@ -233,7 +234,6 @@ else if ($rootScope.activeUser.user.Role == 'Manager'){
                 // UpdateSchedule(response,SelectedMonth);
 
                 $scope.currentHours = response[0].MonthlyDays;
-                console.log($scope.currentHours);
                 while($scope.HoursReady == false){
 
                   if($scope.currentHours.length > 0){
@@ -244,7 +244,7 @@ else if ($rootScope.activeUser.user.Role == 'Manager'){
     }
 
     var UpdateSchedule = function(NewSchedule, Month) {
-        console.log(NewSchedule)
+       console.log(NewSchedule)
         $http.get('/Schedule?Engineer=' + $rootScope.activeUser.user.Name + '&Month=' + Month + '')
             .success(function(response) {
                 console.log(response);
@@ -285,7 +285,7 @@ else if ($rootScope.activeUser.user.Role == 'Manager'){
         var arrayofdates = [today, dd, mm, yyyy];
         return arrayofdates;
     }
-// *********************************************************
+
     var DatesArray = GetDate();
     console.log(DatesArray);
     GetScheduleDay(DatesArray[2], DatesArray[3], $rootScope.activeUser.user.Name);
@@ -442,7 +442,7 @@ else if ($rootScope.activeUser.user.Role == 'Manager'){
                             "Resolution": "0",
                             "Qa": "0",
                             "Update": "0",
-                            "Ftr": "0",
+                           "Ftr": "0",
                             "Sr": "0",
                             "Im": "0",
                             "Month": Month
@@ -566,7 +566,7 @@ else if ($rootScope.activeUser.user.Role == 'Manager'){
         //check Ftr or Res Flags
 
         for (var j = 0 ; j < filteredArray.length ; j++){
-            if(filteredArray[j]["ACTIVITY_TYPE"] == "Resolved"){
+           if(filteredArray[j]["ACTIVITY_TYPE"] == "Resolved"){
 
         if (filteredArray[j]["BREACHED_FLAG"] != "Breached"){
               Achieved_res++;
@@ -697,6 +697,7 @@ CurrentEngineer = $rootScope.activeUser.user.Name;
   var CurrentEngineerInFunc = JSON.parse(AddedEngineer);
 CurrentEngineer = CurrentEngineerInFunc.Name;
 }
+$scope.ImsPerDayReady = false;
 
         //     $http.get('/Schedule?Engineer='+CurrentEngineer+'&Month='+CurrentMonth+'')
         //         .success(function(EngineersSchedule) {
@@ -714,8 +715,6 @@ CurrentEngineer = CurrentEngineerInFunc.Name;
 
         DaysOnQueue = $scope.currentHours[1].Dispatcher +
             $scope.currentHours[0].Support;
-            // need to save it the scorecard db and divide by 8
-
         console.log(DaysOnQueue)
 
         //cast name
@@ -748,7 +747,12 @@ CurrentEngineer = CurrentEngineerInFunc.Name;
                 ImsPerDayfunc((DaysOnQueue / 8), ImArray);
                 console.log($scope.IMSPerDay);
 
+                while($scope.ImsPerDayReady == false){
 
+                                if($scope.IMSPerDay != null){
+                                  $scope.ImsPerDayReady = true;
+                                }
+                              }
                 //update Ims per day on DB, per scorecard
                 //  UpdateImsPerDayOnDB($scope.IMSPerDay, SelectedMonth, $rootScope.activeUser.user.Name);
                 console.log(CurrentMonthInString);
@@ -762,21 +766,23 @@ CurrentEngineer = CurrentEngineerInFunc.Name;
 
     $scope.CalcSrs = function(AddedEngineer) {
 
-        //parse month
+        console.log("Calc SRs")
 
         var DaysOnQueue = 0;
         var CurrentMonthInString = GetMonth();
         var CurrentEngineersSchedule;
         var CurrentMonth = getMonthString(CurrentMonthInString);
-          var CurrentEngineer;
-            if($rootScope.activeUser.user.Role == 'engineer'){
-         CurrentEngineer = $rootScope.activeUser.user.Name;
+        var CurrentEngineer;
+        if($rootScope.activeUser.user.Role == 'engineer'){
+       CurrentEngineer = $rootScope.activeUser.user.Name;
+
       } else if($rootScope.activeUser.user.Role == 'Manager'){
         console.log(AddedEngineer);
             var CurrentEngineerInFunc = JSON.parse(AddedEngineer);
         CurrentEngineer = CurrentEngineerInFunc.Name;
       }
 
+      $scope.SrSPerDayReady = false;
         //     $http.get('/Schedule?Engineer='+CurrentEngineer+'&Month='+CurrentMonth+'')
         //         .success(function(EngineersSchedule) {
         //             console.log(EngineersSchedule);
@@ -824,6 +830,12 @@ CurrentEngineer = CurrentEngineerInFunc.Name;
                   console.log((DaysOnQueue / 8));
                 SrsPerDayfunc((DaysOnQueue / 8), SrArray, $scope.SecurityTickets);
                 console.log($scope.SrSPerDay);
+                while($scope.SrSPerDayReady == false){
+
+                  if($scope.SrSPerDay != null){
+                    $scope.SrSPerDayReady = true;
+                  }
+                }
 
 
 
@@ -891,6 +903,8 @@ CurrentEngineer = CurrentEngineerInFunc.Name;
       var CurrentEngineerInFunc = JSON.parse(AddedEngineer);
       CurrentEngineer = CurrentEngineerInFunc.Name;
     }
+    $scope.UpdateSloReady = false;
+
         var StringYear = DatesArray[3].toString()
         var CurrentMonthInString = GetMonth();
 
@@ -912,6 +926,7 @@ CurrentEngineer = CurrentEngineerInFunc.Name;
                     UpdateOnDB(EngineerTickets[3][monthOnReport], CurrentMonthInString, CurrentEngineer, "Update")
 
                 } else {
+                    $scope.UpdateSloReady = true;
                     UpdateOnDB(EngineerTickets[3][monthOnReport], CurrentMonthInString, CurrentEngineer, "Update")
                 }
             });
@@ -936,7 +951,7 @@ CurrentEngineer = CurrentEngineerInFunc.Name;
 
     var CalcSurvey = function(engineer) {
         var totalsurvey;
-
+        $scope.SurveyReady = false;
         var NewName = CastName(engineer);
 
 
@@ -1048,8 +1063,8 @@ CurrentEngineer = CurrentEngineerInFunc.Name;
 
 
 
-                        var SurveyScore = goodscore / (goodscore + badscore);
-
+                       var SurveyScore = goodscore / (goodscore + badscore);
+                           $scope.SurveyReady = true;
                         UpdateOnDB(SurveyScore * 100, CurrentUserCurrentMonth, engineer, "Survey")
 
                     });
@@ -1059,345 +1074,18 @@ CurrentEngineer = CurrentEngineerInFunc.Name;
 
     $scope.Calculatesurvey = function(AddedEngineer) {
 
-      var CurrentEngineerInFunc = JSON.parse(AddedEngineer);
-        var CurrentEngineer;
+  var CurrentEngineer;
           if($rootScope.activeUser.user.Role == 'engineer'){
        CurrentEngineer = $rootScope.activeUser.user.Name;
     } else if($rootScope.activeUser.user.Role == 'Manager'){
+      var CurrentEngineerInFunc = JSON.parse(AddedEngineer);
+
       CurrentEngineer = CurrentEngineerInFunc.Name;
     }
         CalcSurvey(CurrentEngineer); //  your code here
 
 
     }
-
-/*******************************************************************************
-*
-*
-*******************************************************************************/
-    $scope.CalcMaxAvg=function()
-    {
-      console.log("MAx Avg function");
-      var CurrentMonthInString = GetMonth();
-      var CurrentMonth = getMonthString(CurrentMonthInString);
-      console.log(CurrentMonthInString);
-      var counter_engineers=0;
-      var maxResolution=0;
-      var maxQA=0;
-      var maxUpdate=0;
-      var maxFtr=0;
-      var maxSr=0;
-      var maxIm=0;
-      var maxSurvey=0;
-      var avgRes=0;
-      var avgQA=0;
-      var avgIm=0;
-      var avgSr=0;
-      var avgFtr=0;
-      var avgUpdate=0;
-      var avgSurvey=0;
-
-
-      $http.get('/scorecard')
-          .success(function(response) {
-            if(response.length != 0){
-              var currentscore=response;
-              //console.log(response);
-
-              for(var j=0; j<currentscore.length;j++){
-              for (var i = 0; i < currentscore[j].KPIs.length; i++) {
-
-
-                  if (currentscore[j].KPIs[i].Month ==CurrentMonthInString) {
-                    console.log(currentscore[j].Name);
-                    counter_engineers++;
-                    console.log("Engineers: "+counter_engineers);
-                    var tmpRes=parseFloat(currentscore[j].KPIs[i].Resolution);
-                    var tmpQa=parseFloat(currentscore[j].KPIs[i].Qa);
-                    var tmpUpdate= parseFloat(currentscore[j].KPIs[i].Update);
-                    var tmpFtr=parseFloat(currentscore[j].KPIs[i].Ftr);
-                    var tmpSr=parseFloat(currentscore[j].KPIs[i].Sr);
-                    var tmpIm=parseFloat(currentscore[j].KPIs[i].Im);
-                    var tmpSurvey=parseFloat(currentscore[j].KPIs[i].survey);
-                    avgSr+=tmpSr;
-                    avgSr+=tmpSr;
-                    avgIm+=tmpIm;
-                    avgFtr+=tmpFtr;
-                    avgUpdate+=tmpUpdate;
-                    avgRes+=tmpRes;
-                    avgQA+=tmpQa;
-                    avgSurvey+=tmpSurvey;
-
-                    if(tmpSurvey>maxSr)
-                    {
-                      maxSr=tmpSr;
-                    }
-                    if(tmpSurvey>maxSurvey)
-                    {
-                      maxSurvey=tmpSurvey;
-                    }
-                    if(tmpSr>maxSr)
-                    {
-                      maxSr=tmpSr;
-
-                    }
-                    if(tmpIm>maxIm)
-                    {
-                      maxIm=tmpIm;
-                                        }
-                    if(tmpFtr>maxFtr)
-                    {
-                      maxFtr=tmpFtr;
-
-                    }
-                    if(tmpUpdate> maxUpdate)
-                    {
-                      maxUpdate=tmpUpdate;
-
-                    }
-                      if(tmpRes > maxResolution)
-                      {
-                        maxResolution= tmpRes;
-
-                      }
-                      if(tmpQa >maxQA )
-                      {
-                        maxQA=tmpQa;
-
-                      }
-
-
-
-
-                      //
-                      // $scope.curentscorecard = currentscore.KPIs[i];
-                      // console.log(currentscore.KPIs[i]);
-
-                  } else {
-                      console.log("could not find month")
-
-                  }
-              }//second for
-            }//first for
-            if(counter_engineers>0)
-            {
-              avgQA=avgQA/counter_engineers;
-              avgSr=avgSr/counter_engineers;
-              avgIm=avgIm/counter_engineers;
-              avgFtr=avgFtr/counter_engineers;
-              avgRes=avgRes/counter_engineers;
-              avgSurvey=avgSurvey/counter_engineers;
-              avgUpdate=avgUpdate/counter_engineers;
-            }
-
-            var InitAvgScore=
-            {
-              "Month": CurrentMonthInString,
-              "avgIm":avgIm,
-              "avgSr":avgSr,
-              "avgQa":avgQA,
-              "avgFtr":avgFtr,
-              "avgSurvey":avgSurvey,
-              "avgUpdate":avgUpdate,
-              "avgResolution":avgRes
-
-            }
-            console.log(InitAvgScore);
-          // console.log(" QA="+maxQA+",  SR="+maxSr+", Im="+maxIm+", FTR="+maxFtr+", Res="+maxResolution+", update="+maxUpdate);
-          var InitMaxScore =
-          {
-
-                "Month": CurrentMonthInString,
-                "maxIm":{
-                 "score":maxIm ,
-                 "Name": " "
-                },
-
-                "maxSr": {
-                 "score": maxSr,
-                 "Name": ""
-                },
-                "maxSurvey": {
-                 "score": maxSurvey,
-                 "Name": ""
-                },
-                "maxFtr": {
-                 "score": maxFtr,
-                 "Name": ""
-                },
-                "maxUpdateSlo": {
-                 "score": maxUpdate,
-                 "Name": ""
-                },
-                "maxResolution": {
-                 "score": maxResolution,
-                 "Name": ""
-                },
-                "maxQA": {
-                 "score": maxQA,
-                 "Name": ""
-                }
-
-          }
-
-
-          console.log( InitAvgScore);
-          console.log( InitMaxScore);
-          $scope.UpdatemaxScoreDB(InitMaxScore,CurrentMonthInString);
-          $scope.UpdateAvgScoreDB(InitAvgScore,CurrentMonthInString);
-
-
-
-
-          }
-
-         });
-
-
-    }
-
-
-
-
-/*******************************************************************************
-*            End of calculating Max and average function function              *
-*******************************************************************************/
-$scope.UpdateAvgScoreDB=function(InitAvgScore,CurrentMonthInString)
-{
-  var flag=0;
-console.log("Update the average");
-  $http.get('/averagescore'+'')
-      .success(function(response) {
-        var avgscore = response;
-        console.log(response);
-        console.log("hihihihiih")
-        if(avgscore.length>0)
-        {
-          console.log("in 1111111111111");
-          for(var i=0; i <avgscore.length;i++)
-          {
-             if(avgscore[i].Month==CurrentMonthInString)
-             {
-               console.log("found month in avg");
-               flag=1;
-
-               var Id=avgscore[i]._id;
-               console.log("the Id in avg  is "+Id);
-                $http.put('/averagescore/'+Id,InitAvgScore).success(function(response) {
-                  console.log("updated Avg Score Data")
-                });
-              }
-        }
-
-
-    }
-    if(flag==0)
-    {
-        console.log("here to create a new month");
-        $scope.CreateAvgScoreDB(InitAvgScore);
-
-
-    }
-
-
-  });
-
-}
-
-/*******************************************************************************
-*            post a new month in the Average Score DB                             *
-*******************************************************************************/
-$scope.CreateAvgScoreDB=function(InitAvgScore)
-{
-
-    $http.get('/averagescore'+'')
-      .success(function(response) {
-        var avgscore = response;
-        console.log("Hello");
-
-          $http.post('/averagescore',InitAvgScore)
-              .success(function(response) {
-                  console.log("after post avg  ");
-                  console.log(response);
-              });
-
-
-
-
-        });
-
-}
-
-/*******************************************************************************
-*            post a new month in the MAx Score DB                             *
-*******************************************************************************/
-$scope.CreatemaxScoreDB=function(InitMaxScore)
-{
-
-    $http.get('/maxscore'+'')
-      .success(function(response) {
-        var selectmaxscore = response;
-        //console.log(response);
-
-          $http.post('/maxscore',InitMaxScore)
-              .success(function(response) {
-                  console.log("after post  ");
-                  console.log(response);
-              });
-
-
-
-
-        });
-
-}
-
-/*******************************************************************************
-*            update the max score of a specific month                            *
-*******************************************************************************/
-$scope.UpdatemaxScoreDB=function(InitMaxScore,CurrentMonthInString)
-{
-  var flag=0;
-
-  $http.get('/maxscore'+'')
-      .success(function(response) {
-        var selectmaxscore = response;
-
-        if(selectmaxscore.length>0)
-        {
-          for(var i=0; i <selectmaxscore.length;i++)
-          {
-             if(selectmaxscore[i].Month==CurrentMonthInString)
-             {
-               flag=1;
-               console.log("In update 2 ");
-               var Id=selectmaxscore[i]._id;
-               console.log("the Id is "+Id);
-                $http.put('/maxscore/'+Id,InitMaxScore).success(function(response) {
-                  console.log("updated max Score Data")
-                });
-              }
-        }
-
-
-    }
-    if(flag==0)
-    {
-        console.log("here to create a new month");
-      $scope.CreatemaxScoreDB(InitMaxScore);
-
-
-    }
-
-
-  });
-}
-
-
-/*******************************************************************************
-*                                           *
-*******************************************************************************/
-
 
 
 
@@ -1411,11 +1099,11 @@ $scope.UpdatemaxScoreDB=function(InitMaxScore,CurrentMonthInString)
                 var CurrentEngineerInFunc = JSON.parse(AddedEngineer);
                         CurrentEngineer = CurrentEngineerInFunc.Name;
                     }
-  $scope.FtrnResReady = false;
+                    $scope.FtrnResReady = false;
 
                   var CurrentMonthInString = GetMonth();
                   var CurrentEngineersSchedule;
-                  var CurrentMonth = getMonthString(CurrentMonthInString);
+                 var CurrentMonth = getMonthString(CurrentMonthInString);
 
 
 
@@ -1438,7 +1126,7 @@ $scope.UpdatemaxScoreDB=function(InitMaxScore,CurrentMonthInString)
                           }
 
 
-console.log("****  "+CurrentEngineer);
+                          console.log("****  "+CurrentEngineer);
                            CalculateEngineerFtrAndRes(CurrentEngineer, testarray);
 
 

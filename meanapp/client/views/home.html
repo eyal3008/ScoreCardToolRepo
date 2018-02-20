@@ -6,14 +6,12 @@
         </center>
     </div>
 </div>
-
-
 <div ng-if="activeUser.user.Role != 'engineer'" class="container" ng-controller="HomeController">
   <table class="table table-responsive">
       <div class="container">
     	<div class="row">
 
-    		<center><h2><b> Overall View Team Current ScoreCard <b></h2></center>
+    		<center><h2><b>Team Current Score<b></h2></center>
 
     		<table class="points_table">
     			<thead>
@@ -51,14 +49,12 @@
     </div>
     </table>
 </div>
-<div ng-if="activeUser.user.Role == 'engineer'" class="container" ng-controller="MonthlyController">
-
+<div ng-if="activeUser.user.Role == 'engineer' && !firstTimeLoggedIn" class="container" ng-controller="MonthlyController">
   <center>
 <h3><b>
-Your performance from the beginning of this month up to current date.
+Your performance from the beginning of the month up to date.
 </b></br></br></h3>
 </center>
-
     <div class="row">
         <div class="col-xs-6 col-sm-6 col-md-3 col-lg-3">
 
@@ -117,7 +113,7 @@ Your performance from the beginning of this month up to current date.
 
                 <ul class="list-group list-group-flush text-center" style="font-size:40px">
 
-                    <font ng-class="{ 'Score-red': curentscorecard.Ftr < FTRtarget , 'Score-green': curentscorecard.Ftr > FTRtarget }">
+                    <font ng-class="{ 'Score-red': (curentscorecard.Ftr/100) < FTRtarget , 'Score-green': (curentscorecard.Ftr/100) > FTRtarget }">
                         <li><strong>{{curentscorecard.Ftr}}%</strong></li>
                     </font>
 
@@ -143,7 +139,7 @@ Your performance from the beginning of this month up to current date.
 
                 <ul class="list-group list-group-flush text-center" style="font-size:40px">
 
-                    <font ng-class="{ 'Score-red': curentscorecard.Update < Updatetarget , 'Score-green': curentscorecard.Update > Updatetarget}">
+                    <font ng-class="{ 'Score-red': (curentscorecard.Update/100) < Updatetarget , 'Score-green': (curentscorecard.Update/100) > Updatetarget}">
                         <li><strong>{{curentscorecard.Update}}%</strong></li>
                     </font>
 
@@ -171,7 +167,7 @@ Your performance from the beginning of this month up to current date.
 
                 <ul class="list-group list-group-flush text-center" style="font-size:40px">
 
-                    <font ng-class="{ 'Score-red': curentscorecard.Resolution < Resolutiontarget , 'Score-green': curentscorecard.Resolution > Resolutiontarget}">
+                    <font ng-class="{ 'Score-red': (curentscorecard.Resolution/100) < Resolutiontarget , 'Score-green': (curentscorecard.Resolution/100) > Resolutiontarget}">
                         <li><strong>{{curentscorecard.Resolution}}%</strong></li>
                     </font>
 
@@ -193,4 +189,19 @@ Your performance from the beginning of this month up to current date.
 
     </div>
 
+</div>
+
+
+<div ng-if="activeUser.user.Role == 'engineer' && firstTimeLoggedIn" class="container" ng-controller="MonthlyController">
+
+<center><h2><b>Welcome To ScoreCard Tool, This is your first login!<b></h2></center>
+  <br />
+  <br />
+<center><h3><b>Please Navigate to "Calculate Live Data" Tab to Fetch your Data!<b></h3></center>
+  <br />
+  <br />
+  <br />
+  <br />
+  <br />
+  <br />
 </div>

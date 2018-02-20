@@ -2,7 +2,7 @@ MainApp.controller('HomeController', ['$scope', '$http', '$rootScope', function(
 
   var fullName = $rootScope.activeUser.user.Name.split(' ');
   $scope.firstName = fullName[0];
-
+  $scope.firstTimeLoggedIn = false;
   var GetDate = function() {
 
       var today = new Date();
@@ -42,7 +42,6 @@ MainApp.controller('HomeController', ['$scope', '$http', '$rootScope', function(
 
         var d = new Date();
         var n = month[d.getMonth()];
-        console.log("Month "+n);
         return n;
     }
 
@@ -75,6 +74,7 @@ MainApp.controller('HomeController', ['$scope', '$http', '$rootScope', function(
                 }
 }
 else{
+  $scope.firstTimeLoggedIn = true;
  console.log("this is first time logging in")
  var InitScoreCard = {
 "Name":$rootScope.activeUser.user.Name ,
@@ -95,7 +95,7 @@ else{
 }
  $http.post('/scorecard', InitScoreCard)
      .success(function(response) {
-         console.log(response);
+
      });
 }
             });
@@ -120,10 +120,8 @@ else{
               // console.log(" Engineer Name: "+currentscore.Name);
               // counter++;
               //$scope.names=enginer
-              console.log("the score is "+currentscore);
                 if (currentscore.lenth == 0) {
-                    console.log("No Data");
-                    console.log("the score is "+currentscore);
+
                 }
                 for (var i = 0; i < currentscore.KPIs.length; i++) {
                     if (currentscore.KPIs[i].Month == GetMonth()) {
@@ -138,14 +136,12 @@ else{
                         //console.log(" Engineer Name: "+currentscore.Name);
 
                     } else {
-                        console.log("could not find month")
 
                       }
                     }
                   }
                 }
 
-                console.log("Manger will see:"+ $scope.scorecardData);
 });
 }
 

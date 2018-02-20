@@ -97,8 +97,23 @@ var MaxSchema = new mongoose.Schema({
         require: true,
         default: "0"
 
+      },
+    },
+      maxSurvey:{
+
+        Name:{
+          type: String,
+          require: true,
+          default: "0"
+        },
+
+        score: {
+          type: String,
+          require: true,
+          default: "0"
+
+        }
       }
-  }
 
   });
 

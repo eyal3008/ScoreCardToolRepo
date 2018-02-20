@@ -47,6 +47,11 @@ var averageScoreSchema = new mongoose.Schema ({
           type: String,
           default: "0"
         },
+        avgDaysInQ: {
+          require: true,
+          type: String,
+          default: "0"
+        }
 
 
 

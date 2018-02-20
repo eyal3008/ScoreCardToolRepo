@@ -28,6 +28,14 @@
                     <select name="selectstyle" id="selectstyle" class="form-control" name="repeatSelect" ng-model="SelectedMonth">
                         <option ng-repeat="month in Months " >{{month}}</option>
                       </th>
+                      <th>
+                               <button  style="position: center;" class="btn btn-info"  ng-click="getMaxScore(SelectedMonth)"><b>Calculate the Max Score in the Team</b></button>
+
+                        </th>
+                        <th>
+                                 <button  style="position: center;" class="btn btn-info"  ng-click="getAvgScore(SelectedMonth)"><b>Calculate the Team  Average Score</b></button>
+
+                          </th>
                <th>
                         <button  style="position: center;" class="btn btn-info"  ng-click="LookUp(AddedEngineer, SelectedMonth)"><b>Review reports</b></button>
 

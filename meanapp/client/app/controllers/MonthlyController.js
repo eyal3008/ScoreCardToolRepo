@@ -2,11 +2,29 @@
 
 MainApp.controller('MonthlyController', ['$scope', '$rootScope', '$location', '$http', '$filter', function($scope, $rootScope, $location, $http, $filter) {
 
-    var ResponsivenessScore = 20;
-    var QualityScore = 15;
-    var TimelinessScore = 15;
-    var OverallScore = 30;
-    var ProfessionalismScore = 20;
+    // var ResponsivenessScore = 20;
+    // var QualityScore = 15;
+    // var TimelinessScore = 15;
+    // var OverallScore = 30;
+    // var ProfessionalismScore = 20;
+
+    $http.get('/survey_targets/')
+        .success(function(response) {
+          if(response.length==0)
+          {
+              console.log("Need to go to the Configurations ");
+          }
+          else
+          {
+            var ResponsivenessScore = response[0].Responsiveness;
+            var QualityScore = response[0].Quality;
+            var TimelinessScore = response[0].Timeliness;
+            var OverallScore = response[0].Overall;
+            var ProfessionalismScore = response[0].Professionalism;
+
+          }
+    });
+
 
     $http.get('catalogitem')
         .success(function(response) {
@@ -242,8 +260,8 @@ MainApp.controller('MonthlyController', ['$scope', '$rootScope', '$location', '$
 
         var CurrentEngineer = JSON.parse(SelectedEngineer);
 
-        getMaxScore(SelectedMonth);
-        getAvgScore(SelectedMonth);
+      //  getMaxScore(SelectedMonth);
+      //  getAvgScore(SelectedMonth);
 
         $http.get('/scorecard?Name=' + CurrentEngineer.Name + '', {})
             .success(function(response) {
@@ -258,15 +276,15 @@ MainApp.controller('MonthlyController', ['$scope', '$rootScope', '$location', '$
 
                         $scope.ftr = KpiArray[i].Ftr;
                         $scope.survey = parseFloat(KpiArray[i].Survey)*100;
-                        $scope.ims = KpiArray[i].Im;
-                        $scope.srs = KpiArray[i].Sr;
-                        $scope.qa = KpiArray[i].Qa;
-                        $scope.resolution = KpiArray[i].Resolution;
+                        $scope.ims = parseFloat(KpiArray[i].Im);
+                        $scope.srs = parseFloat(KpiArray[i].Sr);
+                        $scope.qa = parseFloat(KpiArray[i].Qa);
+                        $scope.resolution = parseFloat(KpiArray[i].Resolution);
                         $scope.rank = KpiArray[i].Rank;
-                        $scope.updateslo = KpiArray[i].Update;
+                        $scope.updateslo = parseFloat(KpiArray[i].Update);
 
-                        var im_score = parseInt($scope.ims);
-                        var sr_score = parseInt($scope.srs);
+                        var im_score = parseFloat($scope.ims);
+                        var sr_score = parseFloat($scope.srs);
                         var res_score = parseFloat($scope.resolution);
                         var updateslo_score = parseFloat($scope.updateslo);
                         var ftr_score = parseFloat($scope.ftr);
@@ -276,24 +294,24 @@ MainApp.controller('MonthlyController', ['$scope', '$rootScope', '$location', '$
                         $scope.updateslo = updateslo_score;
                         $scope.resolution = res_score;
 
-                        console.log('ftr ' + ftr_score);
+                      //  console.log('ftr ' + ftr_score);
                         var qa_score = $scope.qa;
 
 
                         console.log("getting data");
                         // data for the charts
-                        $scope.IM_data = [im_score, $scope.avgIm, $scope.maxIm];
-                        $scope.SR_data = [sr_score, $scope.avgSr, $scope.maxSr];
-                        $scope.qa_data = [qa_score, $scope.avgQA, $scope.maxQA];
-                        $scope.ftr_data = [ftr_score, $scope.avgFtr, $scope.maxFtr];
-                        $scope.updateslo_data = [updateslo_score, $scope.avgUpdateSlo, $scope.maxUpdateSlo];
-                        $scope.resolution_data = [res_score, $scope.avgResolution, $scope.maxResolution];
+                        $scope.IM_data = [$scope.ims, $scope.avgIm, $scope.maxIm];
+                        $scope.SR_data = [$scope.srs, $scope.avgSr, $scope.maxSr];
+                        $scope.qa_data = [$scope.qa, $scope.avgQA, $scope.maxQA];
+                        $scope.ftr_data = [$scope.ftr, $scope.avgFtr, $scope.maxFtr];
+                        $scope.updateslo_data = [$scope.updateslo, $scope.avgUpdateSlo, $scope.maxUpdateSlo];
+                        $scope.resolution_data = [$scope.resolution, $scope.avgResolution, $scope.maxResolution];
 
                       // for the status charts :
-                        engineer = [im_score, sr_score, qa_score, res_score, updateslo_score, ftr_score, survey_score];
+                        engineer = [$scope.ims, $scope.srs, $scope.qa, $scope.resolution, $scope.updateslo,$scope.ftr, survey_score];
                         console.log("the status is " + engineer);
                         $scope.maxstatus = [$scope.maxIm, $scope.maxSr, $scope.maxQA, $scope.maxResolution, $scope.maxUpdateSlo, $scope.maxFtr, 100];
-                        $scope.avgstatus = [$scope.avgIm, $scope.avgSr, $scope.avgQA, $scope.avgResolution, $scope.avgUpdateSlo, $scope.avgFtr, 100];
+                        $scope.avgstatus = [$scope.avgIm, $scope.avgSr, $scope.avgQA, $scope.avgResolution, $scope.avgUpdateSlo, $scope.avgFtr, $scope.avgSurvey];
 
                         $scope.data = [engineer, $scope.avgstatus, $scope.maxstatus];// data to the charts
 
@@ -306,7 +324,8 @@ MainApp.controller('MonthlyController', ['$scope', '$rootScope', '$location', '$
 
     //============================== Calculate Max Score =====================
 
-    var getMaxScore = function(month) {
+    var getMaxScore = function(SelectedMonth) {
+      console.log("In Max func");
         $http.get('/maxscore?Month=' + month + '')
             .success(function(response) {
 
@@ -317,16 +336,17 @@ MainApp.controller('MonthlyController', ['$scope', '$rootScope', '$location', '$
                 console.log($scope.maxIm);
                 $scope.maxSr = parseFloat(selectmaxscore[0].maxSr.score);
                 $scope.maxQA = parseFloat(selectmaxscore[0].maxQA.score);
-                $scope.maxFtr = parseFloat(selectmaxscore[0].maxFtr.score) * 100;
-                $scope.maxUpdateSlo = parseFloat(selectmaxscore[0].maxUpdataSlo.score) * 100;
-                $scope.maxResolution = parseFloat(selectmaxscore[0].maxResolution.score) * 100;
-
+                $scope.maxFtr = parseFloat(selectmaxscore[0].maxFtr.score);
+                $scope.maxUpdateSlo = parseFloat(selectmaxscore[0].maxUpdataSlo.score);
+                $scope.maxResolution = parseFloat(selectmaxscore[0].maxResolution.score);
+                console.log("got the Max");
 
             });
     }
 
         //============================== Calculate Average Score =====================
-    var getAvgScore = function(month) {
+    var getAvgScore = function(SelectedMonth) {
+      console.log("In Avg func");
         $http.get('/averagescore?Month=' + month + '', {})
             .success(function(response) {
 
@@ -343,7 +363,7 @@ MainApp.controller('MonthlyController', ['$scope', '$rootScope', '$location', '$
                 $scope.avgUpdateSlo = parseFloat(avgKpi[0].Update);
                 $scope.avgSurvey = parseFloat(avgKpi[0].Survey) ;
 
-
+                console.log("got the Avg");
 
             });
     }
@@ -359,11 +379,6 @@ MainApp.controller('MonthlyController', ['$scope', '$rootScope', '$location', '$
 
     $scope.LookUpEngineer = function(SelectedMonth) {
 
-        //  CalculteSurvey("May","Mohamad Massalha");
-
-        console.log("im here ");
-
-
         //  var CurrentEngineer =$rootScope.activeUser.user.Name;
         console.log($rootScope.activeUser.user.Name);
         $http.get('/scorecard?Name=' + $rootScope.activeUser.user.Name + '', {})
@@ -377,45 +392,45 @@ MainApp.controller('MonthlyController', ['$scope', '$rootScope', '$location', '$
 
                     if (KpiArray[i].Month == SelectedMonth) {
 
-                        $scope.ftr = KpiArray[i].Ftr;
-                        $scope.survey = KpiArray[i].Survey;
-                        $scope.ims = KpiArray[i].Im;
-                        $scope.srs = KpiArray[i].Sr;
+                        $scope.ftr = parseFloat(KpiArray[i].Ftr);
+                        $scope.survey = parseFloat(KpiArray[i].Survey);
+                        $scope.ims = parseFloat(KpiArray[i].Im);
+                        $scope.srs =parseFloat(KpiArray[i].Sr);
                         $scope.qa = KpiArray[i].Qa;
-                        $scope.resolution = KpiArray[i].Resolution;
-                        $scope.rank = KpiArray[i].Rank;
-                        $scope.updateslo = KpiArray[i].Update;
+                        $scope.resolution = parseFloat(KpiArray[i].Resolution);
+                        $scope.rank = parseFloat(KpiArray[i].Rank);
+                        $scope.updateslo = parseFloat(KpiArray[i].Update);
 
-                        var im_score = parseFloat($scope.ims);
-                        var sr_score = parseFloat($scope.srs);
-                        var res_score = parseFloat($scope.resolution);
-                        var updateslo_score = parseFloat($scope.updateslo);
-                        var ftr_score = parseFloat($scope.ftr);
-                        var survey_score = parseFloat($scope.survey);
-                        $scope.survey = survey_score;
+                        // var im_score = parseFloat($scope.ims);
+                        // var sr_score = parseFloat($scope.srs);
+                        // var res_score = parseFloat($scope.resolution);
+                        // var updateslo_score = parseFloat($scope.updateslo);
+                        // var ftr_score = parseFloat($scope.ftr);
+                        // var survey_score = parseFloat($scope.survey);
+                        //$scope.survey = survey_score;
 
-                        $scope.ftr = ftr_score;
-                        $scope.updateslo = updateslo_score;
-                        $scope.resolution = res_score;
-
-                        var qa_score = $scope.qa;
-                        var im_avg = 80;
-                        var Max = 100;
-                        var sr_avg = 100;
-                        var max_sr = 120;
+                        //$scope.ftr = ftr_score;
+                        //$scope.updateslo = updateslo_score;
+                        //$scope.resolution = res_score;
+                        //
+                        // var qa_score = $scope.qa;
+                        // var im_avg = 80;
+                        // var Max = 100;
+                        // var sr_avg = 100;
+                        // var max_sr = 120;
 
 
                         console.log("getting data");
-                        $scope.IM_data = [im_score, im_avg, $scope.maxIm];
-                        $scope.SR_data = [sr_score, sr_avg, $scope.maxSr];
-                        $scope.qa_data = [qa_score, 95, $scope.maxQA];
-                        $scope.ftr_data = [ftr_score, 90, $scope.maxFtr];
-                        $scope.updateslo_data = [updateslo_score, 90, $scope.maxUpdataSlo];
-                        $scope.resolution_data = [res_score, 90, $scope.maxResolution];
+                        $scope.IM_data = [$scope.ims,   $scope.avgIm , $scope.maxIm];
+                        $scope.SR_data = [  $scope.srs, $scope.avgSr, $scope.maxSr];
+                        $scope.qa_data = [$scope.qa,   $scope.avgQA, $scope.maxQA];
+                        $scope.ftr_data = [$scope.ftr, $scope.avgFtr, $scope.maxFtr];
+                        $scope.updateslo_data = [$scope.updateslo , $scope.avgUpdateSlo, $scope.maxUpdataSlo];
+                        $scope.resolution_data = [  $scope.resolution, $scope.avgResolution, $scope.maxResolution];
                         console.log("ok");
-                        engineer = [im_score, sr_score, qa_score, res_score, updateslo_score, ftr_score, survey_score];
+                        engineer = [$scope.ims, $scope.srs, $scope.qa, $scope.resolution, $scope.updateslo, $scope.ftr, $scope.survey];
                         console.log("the status is " + engineer);
-                        $scope.maxstatus = [$scope.maxIm, $scope.maxSr, $scope.maxQA, $scope.maxResolutio, $scope.maxUpdataSlo, $scope.maxFtr, 100];
+                        $scope.maxstatus = [$scope.maxIm, $scope.maxSr, $scope.maxQA, $scope.maxResolution, $scope.maxUpdataSlo, $scope.maxFtr, 100];
                         $scope.data = [engineer, soc_avg, $scope.maxstatus];
 
 
@@ -445,28 +460,7 @@ MainApp.controller('MonthlyController', ['$scope', '$rootScope', '$location', '$
         console.log(CastName(eng.Name));
         var CurrentEngineer = CastName(eng.Name);
         console.log(CurrentEngineer + ' ' + Month);
-        //
-        // $http.get('/onesurvey?Engineer=' + CurrentEngineer + '&Month=' + Month + '')
-        //     .success(function(response) {
-        //         var SelectedSurvey = response[0];
-        //
-        //
-        //
-        //         var goodscore = (response[0].mysurveys[0]["TimelinessG"] * TimelinessScore) + (response[0].mysurveys[0]["QualityG"] * QualityScore) +
-        //             (response[0].mysurveys[0]["ProfG"] * ProfessionalismScore) + (response[0].mysurveys[0]["OverallG"] * OverallScore) + (response[0].mysurveys[0]["ResponsivenessG"] * ResponsivenessScore);
-        //
-        //         var badscore = (response[0].mysurveys[0]["TimelinessB"] * TimelinessScore) + (response[0].mysurveys[0]["QualityB"] * QualityScore) +
-        //             (response[0].mysurveys[0]["ProfB"] * ProfessionalismScore) + (response[0].mysurveys[0]["OverallB"] * OverallScore) + (response[0].mysurveys[0]["ResponsivenessB"] * ResponsivenessScore);
-        //
-        //
-        //
-        //         var SurveyScore = goodscore / (goodscore + badscore);
-        //
-        //         console.log(goodscore);
-        //         console.log(badscore);
-        //         console.log(SurveyScore);
-        //
-        //     });
+
         $scope.IMSPerDay = 0;
         $scope.SrSPerDay = 0;
 
@@ -564,23 +558,7 @@ MainApp.controller('MonthlyController', ['$scope', '$rootScope', '$location', '$
 
         var EngineerClosedTickets = $filter('unique')(filteredArray, "TICKET_NUMBER");
 
-        // console.log(KassamArray);
 
-        // var NewName = CastName(engineer);
-        // var Monthnow = "10";
-        // console.log(NewName);
-        //   $http.get('/Ticket?ASSIGNEE_NAME='+NewName+'&'+'CLOSE_DATE__regex=/^'+ Monthnow +'/i').success(function(response) {
-        //
-        // console.log(response);
-        // console.log(response.length);
-        //
-        //
-        // var ImArray =  Parser(response, 'I', '10', NewName);
-        //
-        // ImsPerDayfunc(10, ImArray);
-        //  console.log(NewName + " " + $scope.IMSPerDay);
-        //
-        //   });
     }
 
     var CalculateEngineerClosedTickets = function(engineer, array) {

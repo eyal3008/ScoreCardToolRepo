@@ -30,13 +30,47 @@
                   </select>
                     </th>
                     <th>
-                        <button style="position: center;" class="btn btn-info" ng-click="getYearlyReprots(AddedEngineer)"><b>Review reports</b></button>
+                        <button style="position: center;" class="btn btn-info" ng-click="getAvgScore()"><b>Calculate Average</b>
+                          <span style="color:green" ng-if="FlagAvg" class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                        </button>
+
+                    </th>
+                    <th>
+                        <button style="position: center;" class="btn btn-info" ng-click="getMaxScore()"><b>Calculate Max</b>
+                          <span style="color:green" ng-if="FlagMax" class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                        </button>
+
+                    </th>
+                    <th>
+                        <button style="position: center;" class="btn btn-info" ng-click="getYearlyReprots(AddedEngineer)"><b>Calculate Engineer performance</b></button>
 
                     </th>
 
 
                 </tr>
-                <tr>
+                <tr ng-if="activeUser.user.Role == 'engineer'" >
+                  <th>
+                      <button style="position: center;" class="btn btn-info" ng-click="getAvgScore()"><b>Calculate Average</b></button>
+
+                  </th>
+                  <th>
+                      <button style="position: center;" class="btn btn-info" ng-click="getMaxScore()"><b>Calculate Max</b></button>
+
+                  </th>
+                  <th>
+                      <button style="position: center;" class="btn btn-info" ng-click="readScore()"><b>Calculate your performance</b></button>
+
+                  </th>
+                </tr>
+                <!-- <tr>
+                  <td>
+                  <button style="position: center;" class="btn btn-info" ng-click="getAvgScore()"><b>Calculate Average</b></button>
+                </td><td>
+                  <button style="position: center;" class="btn btn-info" ng-click="getMaxScore()"><b>Calculate Max</b></button>
+                </td></tr> -->
+                <!-- <tr ng-if="activeUser.user.Role == 'engineer' then ReadEngineerData(activeUser.user.Name)"></tr>
+
+                <tr> -->
                     <div class="panel-heading arrow_box text-center">
                         <h3><strong style="color:blue"> Where focus goes, energy flows and results show !</strong></h3>
                     </div>
@@ -62,14 +96,13 @@
 
             </div>
             </td>
+    <!--*********************************************************************************
+                                               End of the IM BOX
+    ************************************** *******************************************-->
 
-            <!--*********************************************************************************
-                              End of the IM BOX
-************************************** *******************************************-->
-
-            <!--*************************************************************************
+    <!--*************************************************************************
                           Start of SR Charts
-**************************************************************************-->
+    **************************************************************************-->
             <td>
                 <div class="chart-style">
 
@@ -82,15 +115,14 @@
             <!--*********************************************************************
                      End of the SR chart Box
 ************************************************************************-->
-
-            <!--*************************************************************************
-                          Start of another Chart
+  <!--*************************************************************************
+                          Start of Targets Chart
 **************************************************************************-->
 
             <td>
                 <div class="chart-style">
 
-                    <canvas id="Goal" class="chart-bar" chart-options="target_Options" chart-series="KPIs" chart-data="target" chart-labels="KPIs_labels" chart-colors="colors">
+                    <canvas id="Goal" class="chart-bar" chart-options="target_Options" chart-series="KPIs" chart-data="target_data" chart-labels="KPIs_labels" chart-colors="colors">
     </canvas>
 
                 </div>
